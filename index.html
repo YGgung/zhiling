@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0B41CD">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="随身练">
+<meta name="format-detection" content="telephone=no">
+<title>智领靶向 · 随身练</title>
+<style>
+:root{
+  --blue:#0B41CD;--blue-2:#1E5BE6;--blue-soft:#EAF1FF;--blue-line:#C9D9FB;
+  --ink:#1A2233;--ink-2:#4A5568;--ink-3:#8590A2;--line:#E3E8F0;--bg:#F5F8FC;--card:#FFFFFF;
+  --ok:#15803D;--ok-bg:#E7F6EC;--bad:#B42318;--bad-bg:#FDECEA;--warn:#B54708;--warn-bg:#FEF4E6;
+  --radius:12px;--radius-s:8px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Source Han Sans SC",sans-serif;
+  font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+#app{max-width:640px;margin:0 auto;min-height:100vh;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+.top{position:sticky;top:0;z-index:20;background:var(--blue);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:8px}
+.top h1{font-size:17px;margin:0;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .back{background:transparent;border:0;color:#fff;padding:6px 8px 6px 0;font-size:15px;cursor:pointer;min-height:36px}
+.top .tag{font-size:13px;background:rgba(255,255,255,.18);padding:2px 10px;border-radius:999px;white-space:nowrap}
+.top .tag.red{background:#fff;color:var(--bad);font-weight:600}
+.wrap{padding:14px}
+.hero{background:linear-gradient(160deg,#0B41CD 0%,#1E5BE6 100%);color:#fff;padding:calc(22px + env(safe-area-inset-top)) 18px 22px}
+.hero h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.5px}
+.hero p{margin:4px 0 0;opacity:.88;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 0}
+.stat{background:rgba(255,255,255,.14);border-radius:var(--radius-s);padding:8px 6px;text-align:center}
+.stat b{display:block;font-size:18px;line-height:1.3}
+.stat span{font-size:12px;opacity:.85}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.mode{display:flex;gap:12px;align-items:flex-start;cursor:pointer;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.mode:active{background:var(--blue-soft)}
+.mode .no{flex:none;width:36px;height:36px;border-radius:10px;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700}
+.mode h3{margin:0;font-size:16px}
+.mode p{margin:2px 0 0;font-size:13px;color:var(--ink-2)}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.tool{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-s);padding:10px 4px;text-align:center;font-size:13px;cursor:pointer}
+.tool b{display:block;font-size:16px;color:var(--blue)}
+.sec-title{font-size:13px;color:var(--ink-3);margin:18px 2px 8px;letter-spacing:.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--blue-line);background:#fff;color:var(--ink-2);border-radius:999px;padding:5px 12px;font-size:14px;cursor:pointer;min-height:34px}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.link{background:none;border:0;color:var(--blue);font-size:14px;cursor:pointer;padding:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:10px;padding:10px 16px;font-size:15px;cursor:pointer;min-height:44px}
+.btn.ghost{background:#fff;color:var(--blue)}
+.btn.gray{background:#fff;color:var(--ink-2);border-color:var(--line)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.q-meta{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--ink-3);margin-bottom:8px;flex-wrap:wrap}
+.badge{font-size:12px;border-radius:6px;padding:1px 8px;background:var(--blue-soft);color:var(--blue)}
+.badge.multi{background:var(--warn-bg);color:var(--warn)}
+.badge.topic{background:#F1F3F7;color:var(--ink-2)}
+.q-stem{font-size:17px;font-weight:600;margin:0 0 12px;line-height:1.55}
+.opt{display:flex;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 12px;margin-bottom:9px;cursor:pointer;font-size:15px;line-height:1.5;align-items:flex-start}
+.opt .k{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--blue-line);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--blue);font-weight:600;margin-top:-1px}
+.opt.multi .k{border-radius:6px}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .k{background:var(--blue);color:#fff;border-color:var(--blue)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.right .k{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .k{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.miss{border-color:var(--ok);border-style:dashed}
+.opt[disabled]{cursor:default}
+.verdict{border-radius:10px;padding:12px;margin-top:4px;font-size:15px}
+.verdict.ok{background:var(--ok-bg);color:#0F5A2B}
+.verdict.bad{background:var(--bad-bg);color:#8A1C12}
+.verdict.view{background:var(--blue-soft);color:#0A3496}
+.verdict b{font-weight:700}
+.explain{margin-top:8px;color:var(--ink);font-size:14.5px}
+.src{display:block;margin-top:6px;color:var(--ink-3);font-size:12.5px}
+.fixnote{margin-top:6px;font-size:12.5px;color:var(--warn)}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.bar-in{max-width:640px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.bar-in .btn{flex:1;padding:10px 8px}
+.bar-in .mid{flex:none;min-width:76px;text-align:center;font-size:14px;color:var(--ink-2);background:none;border:0;cursor:pointer;padding:8px 4px}
+.progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin:0 0 12px}
+.progress i{display:block;height:100%;background:var(--blue);border-radius:4px}
+.sheet-mask{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;width:100%;max-width:640px;max-height:78vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom))}
+.sheet h3{margin:0 0 4px;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:12px}
+.cell{border:1px solid var(--line);background:#fff;border-radius:8px;height:40px;font-size:14px;cursor:pointer}
+.cell.done{background:var(--blue-soft);border-color:var(--blue-line);color:var(--blue)}
+.cell.r{background:var(--ok-bg);border-color:#A7DDB7;color:var(--ok)}
+.cell.w{background:var(--bad-bg);border-color:#F3B4AD;color:var(--bad)}
+.cell.cur{outline:2px solid var(--blue);outline-offset:1px}
+.enav{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:12px}
+.enav .cell{height:34px;padding:0;font-size:13px}
+.link.inl{padding:0 2px}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--ink-3);margin-top:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.big-score{text-align:center;padding:18px 0 8px}
+.big-score b{font-size:56px;color:var(--blue);line-height:1}
+.big-score span{font-size:18px;color:var(--ink-2)}
+.kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+.kv:last-child{border-bottom:0}
+.meter{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin-top:4px}
+.meter i{display:block;height:100%;background:var(--blue)}
+.meter.low i{background:var(--bad)}
+.meter.mid i{background:#D97706}
+.meter.high i{background:var(--ok)}
+.rv{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px;background:#fff}
+.rv-h{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-3)}
+.rv-h .pts{margin-left:auto;font-weight:700}
+.pts.ok{color:var(--ok)}.pts.bad{color:var(--bad)}.pts.half{color:var(--warn)}
+.rv-s{font-size:15px;font-weight:600;margin:4px 0 6px}
+.rv-a{font-size:14px;color:var(--ink-2)}
+.rv-o{font-size:13.5px;color:var(--ink-2);margin:2px 0}
+.rv-o.c{color:var(--ok);font-weight:600}
+.rv-o.x{color:var(--bad);text-decoration:line-through}
+.empty{text-align:center;color:var(--ink-3);padding:40px 0;font-size:15px}
+.note{font-size:13px;color:var(--ink-3)}
+.warnbox{background:var(--warn-bg);color:#7A3306;border-radius:10px;padding:10px 12px;font-size:14px}
+.infobox{background:var(--blue-soft);color:#0A3496;border-radius:10px;padding:10px 12px;font-size:14px}
+input[type=number]{font:inherit;width:90px;padding:6px 10px;border:1px solid var(--blue-line);border-radius:8px;min-height:36px}
+textarea{font:inherit;font-size:15px;width:100%;min-height:84px;padding:10px;border:1px solid var(--blue-line);border-radius:10px;resize:vertical;background:#fff}
+/* roleplay */
+.case{display:block;width:100%;text-align:left;cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px}
+.case .cno{font-size:12px;color:var(--blue);font-weight:700;letter-spacing:1px}
+.case h3{margin:2px 0 4px;font-size:15.5px;line-height:1.45}
+.case p{margin:0;font-size:13px;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.case .done{float:right;font-size:12px;color:var(--ok);background:var(--ok-bg);border-radius:6px;padding:0 8px}
+.tabs{display:flex;gap:4px;overflow-x:auto;background:#fff;border-bottom:1px solid var(--line);padding:0 8px;position:sticky;top:56px;z-index:15;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:0;background:none;padding:12px 12px 10px;font-size:15px;color:var(--ink-2);border-bottom:2px solid transparent;cursor:pointer}
+.tab.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.h4{font-size:14px;color:var(--blue);font-weight:700;margin:0 0 6px}
+.p{margin:0;font-size:15px}
+ul.b{margin:6px 0 0;padding-left:20px}
+ul.b li{margin:4px 0;font-size:15px}
+.quote{border-left:3px solid var(--blue-line);background:#F7F9FD;padding:8px 10px;border-radius:0 8px 8px 0;font-size:15px;color:var(--ink);margin:6px 0}
+.who{font-size:12px;color:var(--ink-3)}
+.basis{font-size:12.5px;color:var(--ink-3);margin-top:8px}
+.stages{display:flex;gap:4px;margin:0 0 12px}
+.stages span{flex:1;text-align:center;font-size:12px;padding:5px 0;border-radius:6px;background:#EEF1F6;color:var(--ink-3)}
+.stages span.on{background:var(--blue);color:#fff}
+.stages span.past{background:var(--blue-soft);color:var(--blue)}
+.chat{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 12px;border-radius:14px;font-size:15px;line-height:1.6;position:relative}
+.msg.doc{align-self:flex-start;background:#fff;border:1px solid var(--line);border-top-left-radius:4px}
+.msg.rep{align-self:flex-end;background:var(--blue-soft);border:1px solid var(--blue-line);border-top-right-radius:4px}
+.msg.mine{align-self:flex-end;background:#fff;border:1px dashed var(--blue-line);border-top-right-radius:4px}
+.msg .lab{display:block;font-size:12px;color:var(--ink-3);margin-bottom:2px}
+.msg .say{float:right;margin:-2px -4px 0 8px;border:1px solid var(--line);background:#fff;border-radius:6px;font-size:12px;padding:0 6px;color:var(--blue);cursor:pointer}
+.stage-sep{align-self:center;font-size:12px;color:var(--ink-3);background:#EEF1F6;border-radius:999px;padding:1px 10px}
+.coach{background:#fff;border:1px solid var(--blue-line);border-radius:12px;padding:12px;margin-top:4px}
+.coach .tip{font-size:13.5px;color:#0A3496;background:var(--blue-soft);border-radius:8px;padding:8px 10px;margin-bottom:8px}
+.kw{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.kw span{font-size:12.5px;border-radius:6px;padding:1px 8px}
+.kw .hit{background:var(--ok-bg);color:var(--ok)}
+.kw .miss{background:#F1F3F7;color:var(--ink-3)}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14.5px;cursor:pointer}
+.chk:last-child{border-bottom:0}
+.chk input{width:20px;height:20px;margin-top:2px;flex:none}
+.flash{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:#fff}
+.flash .q{font-weight:600;font-size:15.5px}
+.flash .a{margin-top:8px;font-size:15px;background:var(--ok-bg);border-radius:8px;padding:8px 10px;color:#0F4A24}
+table.ref{width:100%;border-collapse:collapse;font-size:14px}
+table.ref td{border-bottom:1px solid var(--line);padding:9px 4px;vertical-align:top}
+table.ref td:first-child{width:28%;font-weight:600;color:var(--blue);padding-right:8px}
+table.ref .s{display:block;color:var(--ink-3);font-size:12px;margin-top:2px}
+.foot{text-align:center;color:var(--ink-3);font-size:12px;padding:18px 12px 6px}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:rgba(26,34,51,.92);color:#fff;padding:8px 16px;border-radius:999px;font-size:14px;z-index:60;pointer-events:none}
+.fav-on{color:var(--warn)!important;border-color:#F5C98A!important;background:var(--warn-bg)!important}
+@media (min-width:520px){.grid{grid-template-columns:repeat(8,1fr)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>const DATA={"questions":[{"id":2,"topic":"HR+","type":"single","stem":"伊那利塞的作用机制是？","options":["高选择性PI3Kα抑制剂，抑制突变型p110α激酶活性并可诱导其降解，阻断PI3K/AKT通路信号传导","CDK4/6抑制剂，将细胞周期阻滞于G1期","新一代口服SERD，通过“完全拮抗-强力固定-深度降解”三重机制降解ER受体","SERM（选择性雌激素受体调节剂），对ER半拮抗半激动"],"answer":"A","explain":"伊那利塞高选择性抑制PI3Kα，并只诱导突变型p110α降解、野生型不受影响，从上游阻断PI3K/AKT通路。B是CDK4/6抑制剂的机制，C是新一代口服SERD的机制。","source":"伊赫莱产品资料（作用机制）"},{"id":3,"topic":"HR+","type":"single","stem":"III期INAVO120研究中，伊那利塞+哌柏西利+氟维司群三联方案一线治疗PIK3CA突变、内分泌耐药的HR+/HER2-晚期乳腺癌，主要终点中位PFS为？","options":["17.2个月 vs 对照组7.3个月（HR=0.42）","8.8个月 vs 对照组5.5个月","16.0个月 vs 对照组9.2个月","5.6个月 vs 对照组5.5个月"],"answer":"A","explain":"主要终点为研究者评估的PFS。最终分析三联组mPFS 17.2 vs 7.3个月（HR 0.42），属描述性更新；说明书收录主要分析15.0 vs 7.3个月（HR 0.43）。","source":"INAVO120最终分析（NEJM 2025）；伊赫莱说明书"},{"id":4,"topic":"HR+","type":"multi","stem":"关于伊那利塞三联方案的安全性管理，下列说法正确的有？（多选）","options":["高血糖是PI3Kα抑制剂的“在靶”类效应，治疗期间需定期监测空腹血糖，降糖药物首选二甲双胍","用药前需采用充分验证的检测方法确认PIK3CA突变状态，方能选择适合的患者","常见不良反应包括中性粒细胞减少、口腔黏膜炎、腹泻等，多数可通过监测、支持治疗和剂量调整管理","治疗期间无需监测血糖，一旦发生高血糖必须永久停药"],"answer":"ABC","explain":"高血糖是PI3K抑制的中靶效应，需定期测空腹血糖、首选二甲双胍；用药前须经验证的方法确认PIK3CA突变；常见AE多可经监测和调剂量管理。D错，高血糖按血糖分级处理，不是一律停药。","source":"伊赫莱说明书"},{"id":5,"topic":"HR+","type":"single","stem":"III期lidERA研究中，吉雷司群单药辅助治疗较标准内分泌治疗，3年复发/死亡风险降低幅度及3年iDFS为？","options":["风险显著降低30%（HR=0.70），3年iDFS 92.4% vs 89.6%","风险降低25%（HR=0.75），3年iDFS 90.3% vs 84.6%","风险降低21%（HR=0.79），3年iDFS 88.8% vs 83.4%","风险降低30%（HR=0.70），3年iDFS 88.8% vs 83.4%"],"answer":"A","explain":"lidERA中，吉雷司群较标准内分泌治疗使浸润性疾病复发或死亡风险降低30%（HR 0.70），3年iDFS 92.4% vs 89.6%。C项HR 0.79是未成熟的中期OS。","source":"lidERA（SABCS 2025）","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":6,"topic":"HR+","type":"multi","stem":"关于吉雷司群（伊赫达®），下列说法正确的有？（多选）","options":["独特“分子钳”三重机制：完全拮抗、强力固定、深度降解，从源头阻断ER通路，对野生型和ESR1突变型ER均强效","30 mg每日一次口服，饭前饭后均可，无需额外的血常规/肝肾功能常规监测","lidERA研究中因不良反应停药率仅5.3%，低于标准内分泌治疗的8.2%","用药期间需像瑞波西利一样定期监测心电图以警惕QTc间期延长"],"answer":"ABC","explain":"吉雷司群通过拮抗、固定、降解ER起效，对野生型和ESR1突变型ER均有效；30 mg每日一次、饭前饭后均可；lidERA因AE停药5.3% vs 8.2%。D错，需关注心动过缓。","source":"吉雷司群作用机制文献（Cell Chem Biol 2026）；lidERA（SABCS 2025）","check":"B项「无需额外血常规/肝肾功能常规监测」目前没有说明书依据（吉雷司群在中国尚未获批），讲解时不要引用。","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":7,"topic":"Phesgo","type":"single","stem":"赫双妥®（帕妥珠曲妥珠单抗注射液，皮下注射）的维持剂量规格是？","options":["帕妥珠单抗600 mg + 曲妥珠单抗600 mg（10 ml）","帕妥珠单抗1200 mg + 曲妥珠单抗600 mg（15 ml）","帕妥珠单抗600 mg + 曲妥珠单抗440 mg（10 ml）","帕妥珠单抗840 mg + 曲妥珠单抗600 mg（15 ml）"],"answer":"A","explain":"说明书中维持剂量（10 ml）为帕妥珠单抗600 mg+曲妥珠单抗600 mg，每3周一次。B项1200 mg+600 mg（15 ml）是负荷剂量，两种规格不能互相替代。","source":"赫双妥说明书"},{"id":8,"topic":"皮下开关","type":"single","stem":"根据推广资料，乳腺癌双靶治疗由传统静脉制剂（输注约3-4小时）转为皮下制剂后，单次完成给药仅需约？","options":["5-8分钟","20-30分钟","40-60分钟","1-2小时"],"answer":"A","explain":"赫双妥说明书写明负荷剂量大腿皮下注射约8分钟、维持剂量约5分钟，合称5–8分钟，且不需要静脉置管和按体重配液，给药环节明显缩短。","source":"赫双妥说明书（2025-02-20版）、赫双妥医保申报材料","check":"静脉双靶输注时长各资料口径不一（医保申报材料写60–150分钟），对医生讲时以说明书和本院实际为准。"},{"id":9,"topic":"Phesgo","type":"multi","stem":"专家共识指出，抗肿瘤皮下制剂可为“以患者为中心”的日间诊疗模式赋能，其“三省”价值包括？（多选）","options":["省时：注射时间短，缩短等待及给药时间，5-8分钟完成皮下注射","省钱：皮下双靶制剂价格更低，单个患者18个周期可节省药品费用约4.87万元","省空间：释放床位资源，提高床位周转率，优化病种结构助力CMI提升","省检查：转为皮下给药后无需再进行LVEF心脏功能监测"],"answer":"ABC","explain":"专家共识把皮下制剂对日间诊疗的价值归纳为省时、省钱、省空间：给药快、费用更低、释放床位并优化病种结构。D错在转为皮下后仍需定期评估LVEF。","source":"出题人提供的资料（未单独核对出处）"},{"id":10,"topic":"Phesgo","type":"single","stem":"下列哪项不属于赫双妥®说明书批准的适应症？","options":["HER2阳性、局部晚期、炎性或早期乳腺癌（直径>2 cm或淋巴结阳性）患者联合化疗的新辅助治疗","具有高复发风险的HER2阳性早期乳腺癌患者的辅助治疗","与多西他赛联合，用于既往未接受过抗HER2治疗的HER2阳性转移性或不可切除的局部复发性乳腺癌","HER2阳性晚期乳腺癌经抗HER2治疗失败后的二线及以上治疗"],"answer":"D","explain":"说明书批准三项适应症：联合化疗的新辅助、高复发风险早期乳腺癌的辅助，以及联合多西他赛的晚期一线。抗HER2治疗失败后的二线及以上不在批准范围内。","source":"赫双妥说明书"},{"id":11,"topic":"皮下开关","type":"single","stem":"以苏州某医院为例，乳腺日间诊疗使用皮下双靶制剂较传统住院静脉制剂，单个患者18个治疗周期可节省药品费用约？","options":["4.87万元","0.87万元","1.87万元","9.87万元"],"answer":"A","explain":"题中金额是苏州某医院按全疗程做的个案测算，反映日间皮下方案与住院静脉方案的费用差异；数值只代表该院的测算条件，不宜外推到其他医院或具体患者。","source":"出题人提供的资料（未单独核对出处）","check":"单中心测算数据，不外推到其他医院，也不对具体患者承诺费用节省。"},{"id":12,"topic":"HR+","type":"multi","stem":"PIK3CA突变可以通过什么方式检出？","options":["PCR","NGS","免疫组化","FISH"],"answer":"AB","explain":"2025版共识指出PIK3CA突变可用NGS或PCR检测，组织标本优先、ctDNA补充。免疫组化查的是蛋白表达，FISH查的是基因扩增，都不用于检测PIK3CA点突变。","source":"2025版PIK3CA检测共识"},{"id":13,"topic":"HR+","type":"multi","stem":"以下哪些是伊那利塞的目标患者肖像？","options":["之前服用内分泌药物","定期出现在门诊和药房","HR+HER2-原发或继发内分泌耐药","PIK3CA突变"],"answer":"ABCD","explain":"伊那利塞的适用人群是既往接受过内分泌治疗、出现原发或继发内分泌耐药、携带PIK3CA突变的HR+/HER2-晚期乳腺癌患者，这类患者通常要定期门诊随访和取药。","source":"出题人提供的资料（未单独核对出处）"},{"id":14,"topic":"HR+","type":"single","stem":"INAVO120研究的设计为？","options":["单中心、随机对照研究","国际多中心、双盲随机对照研究","病例对照研究","队列研究"],"answer":"B","explain":"INAVO120是III期、国际多中心、随机、双盲、安慰剂对照研究，325例患者按1:1随机接受伊那利塞或安慰剂，两组均联合哌柏西利和氟维司群。","source":"INAVO120主要分析（NEJM 2024）"},{"id":15,"topic":"HR+","type":"single","stem":"哪种观察到的不良事件表明了PI3K抑制剂的特征性安全信号？","options":["高血糖和皮疹","脱发","心血管疾病","内脏器官衰竭"],"answer":"A","explain":"抑制PI3K会减少肌肉和脂肪摄取葡萄糖，引起高血糖，属中靶效应；皮疹也是PI3K通路抑制剂需特别关注的不良反应，与高血糖、口腔炎、腹泻同列。","source":"伊赫莱说明书；INAVO120安全性数据"},{"id":16,"topic":"HR+","type":"single","stem":"INAVO120研究中，以下哪些不是纳入患者的关键条件？","options":["内分泌治疗过程中或完成后12个月内疾病进展","HER2阳性乳腺癌","ECOG评分0-1","伴随PIK3CA突变"],"answer":"B","explain":"INAVO120只入组HR+/HER2-、经组织或ctDNA确认PIK3CA突变、辅助内分泌治疗期间或结束后12个月内复发的患者，HER2阳性不在入组范围。","source":"INAVO120入组标准（伊赫莱说明书）"},{"id":17,"topic":"Phesgo","type":"single","stem":"重组人透明质酸酶（rHuPH20）实现大体积皮下给药的机制是？","options":["稀释药物浓度，减小注射体积","暂时性降解注射部位局部的透明质酸，提高组织通透性，突破 2ml 皮下给药体积限制","收缩局部血管，减缓药物吸收速度","永久性破坏皮下胶原结构"],"answer":"B","explain":"rHuPH20暂时、可逆地降解注射部位的透明质酸，提高皮下组织渗透性，突破皮下给药一般不超过2 ml的体积限制；渗透性在24–48小时内恢复，不会永久破坏组织。","source":"赫双妥说明书；赫双妥医保申报材料"},{"id":18,"topic":"皮下开关","type":"single","stem":"专家共识强调，抗肿瘤皮下制剂可为“以患者为中心的日间诊疗模式”赋能，其核心价值概括为“皮下三省”，指的是以下哪一项？","options":["省人力、省药品、省床位","省钱、省时间、省空间","省流程、省陪护、省检查","省配置、省输注、省随访"],"answer":"B","explain":"「皮下三省」概括皮下制剂为日间诊疗带来的三方面价值：省钱、省时间、省空间，对应减少住院相关支出、缩短给药和在院时间、少占床位和输液椅位。","source":"出题人提供的资料（未单独核对出处）"},{"id":19,"topic":"Phesgo","type":"single","stem":"皮下注射时，关于注射部位选择的要求，以下正确的是？","options":["固定在同一侧大腿注射，便于观察","左右侧大腿交替注射，距上一次注射点至少 2.5cm，避开疤痕、硬结、纹身","选择上臂外侧三角肌处注射","注射部位不受限制，任选皮肤完好处即可"],"answer":"B","explain":"说明书规定仅在大腿皮下注射，只选健康皮肤，避开发红、瘀伤、压痛或发硬处；护理资料要求左右大腿交替，新注射点距上次至少2.5 cm。上臂或固定一侧都不对。","source":"赫双妥说明书；赫双妥皮下注射护理资料"},{"id":20,"topic":"Phesgo","type":"single","stem":"注射后患者教育中，关于回家后注射部位的护理，正确的是？","options":["局部热敷促进药物吸收","可进行局部理疗缓解不适","保护注射部位，保持清洁干燥，禁忌热敷、理疗或用力揉捏，保持肌肉放松","用力揉捏防止硬结形成"],"answer":"C","explain":"护理资料要求注射后禁止热敷、按摩和理疗，这些会影响药物吸收速率；局部发红发热可以冰敷。A、B、D的热敷、理疗、用力揉捏都属于禁忌做法。","source":"赫双妥皮下注射护理资料"},{"id":21,"topic":"皮下开关","type":"multi","stem":"乳腺癌便捷诊疗中心模式下，患者端的体验改善包括以下哪些？","options":["复诊患者无需至外科门诊开药及办理出入院手续，无需排队等床","院内流程缩短 2-3 倍，输液等候时间缩短至 20 分钟以内","所有就诊环节（报到、采血检验、治疗、结算、随访）均在便捷诊疗中心一站式完成","患者必须住院观察 3 天以上方可离院"],"answer":"ABC","explain":"便捷诊疗中心把开药、出入院手续、采血检验、治疗、结算和随访集中一站式完成，患者少排队、不用等床，流程和候诊时间明显缩短；日间模式当天治疗当天离院，D错。","source":"出题人提供的资料（未单独核对出处）"},{"id":22,"topic":"皮下开关","type":"single","stem":"关于医保支付方式改革，下列说法正确的是？","options":["过去按DRG/DIP付费，现在改为按项目付费","按项目付费属于预付制","DRG/DIP付费属于预付制","DRG/DIP付费会削弱医保基金可持续性"],"answer":"C","explain":"DRG/DIP按病组或病种分值事先定好支付标准，属于预付制。改革方向是从按项目付费转向DRG/DIP，A说反了；按项目付费是后付制，B错；改革目的正是提升基金可持续性，D错。","source":"医院管理通用概念"},{"id":23,"topic":"皮下开关","type":"single","stem":"关于“国考”四大指标的分值比重，正确的是？","options":["医疗质量44%、运营效率33%、持续发展16%、满意度5%","医疗质量33%、运营效率44%、持续发展16%、满意度5%","医疗质量4%、运营效率3%、持续发展2%、满意度1%","四项各占25%"],"answer":"A","explain":"国考从医疗质量、运营效率、持续发展、满意度评价四个维度考核三级公立医院，各维度权重不同，医疗质量占比最高、运营效率次之，满意度评价占比最低。","source":"出题人提供的资料（未单独核对出处）","check":"各维度分值占比未找到出处（A项四项相加为98%），待出题人核对。"},{"id":24,"topic":"HR+","type":"single","stem":"关于INAVO120研究的基线特征与疗效数据，以下表述完全正确的一组是？","options":["入组患者100%为内分泌耐药，其中原发性内分泌耐药占比约为66%，继发性内分泌耐药占比约为34%","疾病进展后，伊那利塞组在三线及以上治疗中接受ADC（抗体偶联药物）的患者比例（35.7%）显著高于安慰剂对照组（16.7%）","入组患者中伴有内脏转移的比例高达78.9%，且所有入组患者均经组织或ctDNA检测确定携带PIK3CA突变","伊那利塞三联方案组将患者的疾病进展或死亡风险（PFS）降低了33%（HR=0.67），并将单纯的死亡风险（OS）降低了58%（HR=0.42）"],"answer":"C","explain":"INAVO120入组者100%内分泌耐药、均经组织或ctDNA确认PIK3CA突变，内脏转移82.0%/78.0%。A、B、D把耐药比例、后线ADC比例、PFS/OS的HR写反。","source":"INAVO120基线数据与最终分析（NEJM 2025）","check":"C项「内脏转移78.9%」与公开数据（两组分别82.0%、78.0%）不完全一致，待出题人核对。"},{"id":26,"topic":"Phesgo","type":"single","stem":"赫双妥的推荐起始剂量为？","options":["帕妥珠单抗600mg＋曲妥珠单抗600mg","帕妥珠单抗1200mg＋曲妥珠单抗600mg","帕妥珠单抗1200mg＋曲妥珠单抗1200mg","帕妥珠单抗600mg＋曲妥珠单抗1200mg"],"answer":"B","explain":"首次给药用负荷剂量（15 ml）：帕妥珠单抗1200 mg+曲妥珠单抗600 mg，之后每3周给维持剂量600 mg+600 mg。A项是维持剂量，两者不能互相替代。","source":"赫双妥说明书"},{"id":27,"topic":"HR+","type":"single","stem":"乳腺癌分子分型中，HR+（激素受体阳性）的免疫组化判定标准是","options":["ER≥10%","ER≥1%即判定为 HR+","PR≥20%","HER2强阳性"],"answer":"B","explain":"免疫组化ER阳性细胞≥1%即判为ER阳性、归入HR+，lidERA等研究也按ER（IHC≥1%）界定入组人群。HER2强阳性属于HER2分型，与HR判定无关。","source":"lidERA入组标准（SABCS 2025）"},{"id":28,"topic":"HR+","type":"single","stem":"lidERA研究中，下列吉雷司群辅助治疗的信息正确的是","options":["浸润性疾病复发或死亡风险降低30%，因 AE 停药率仅 5.3%","复发风险无改善","因AE停药率超过 30%","仅用于男性患者"],"answer":"A","explain":"lidERA中吉雷司群使浸润性疾病复发或死亡风险降低30%（HR 0.70），因AE停药5.3%，低于标准内分泌治疗的8.2%；但因AE中断给药更多（12.7% vs 6.6%）。","source":"lidERA（SABCS 2025）","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":29,"topic":"皮下开关","type":"multi","stem":"皮下制剂的“三省”价值包括","options":["省钱","省时间","省人力","省空间"],"answer":"ABD","explain":"「皮下三省」指省钱、省时间、省空间，对应减少住院相关支出、缩短在院时间、少占床位和输液椅位；「省人力」不在这一概括里，所以C不选。","source":"出题人提供的资料（未单独核对出处）"},{"id":30,"topic":"HR+","type":"multi","stem":"对NATALEE研究的反思要点包括","options":["4.5%绝对 iDFS 获益，但可能带来高达约 81%\"过度治疗\"","CDK4/6i的 ≥3 级 AE 升高 30–40 倍","瑞波西利组出现8例 Hy's Law（海氏法则）肝损伤预警事件","早期HR+应全部无差别使用 CDK4/6i 强化"],"answer":"ABC","explain":"NATALEE中瑞波西利强化辅助治疗的绝对iDFS获益有限，多数患者可能被过度治疗，同时严重不良反应和肝损伤风险增加，所以早期HR+应按复发风险分层决定是否强化，不能无差别使用。","source":"出题人提供的资料（未单独核对出处）"},{"id":31,"topic":"HR+","type":"multi","stem":"HR+/HER2-乳腺癌内分泌治疗（ET）贯穿早晚期，其\"Backbone（基石）\"地位体现在","options":["ER通路是治疗主靶点","绝经状态决定阻断策略（卵巢抑制/芳香化酶抑制剂/氟维司群）","术后存在1–5年、5–10 年两个复发高峰，需长期 ET","一旦耐药即永久放弃内分泌治疗"],"answer":"ABC","explain":"内分泌治疗以ER通路为主靶点，绝经前需卵巢功能抑制，绝经后可选芳香化酶抑制剂或氟维司群；术后复发风险持续多年，需长期治疗。耐药后仍可换药并联合靶向药，D错。","source":"出题人提供的资料（未单独核对出处）"},{"id":32,"topic":"皮下开关","type":"single","stem":"在 DRG/DIP 支付改革背景下，将 HER2 阳性乳腺癌患者由静脉双靶转为皮下制剂日间治疗，释放出来的床位优先用于以下哪类病例，最利于提升医院 CMI 值","options":["轻症随访患者","高难度三四级手术疑难重症病例","普通感冒抗感染患者","单纯取药复诊患者"],"answer":"B","explain":"CMI反映收治病例的平均权重，疑难重症和三四级手术病例权重高。把释放出来的床位优先用于这类病例，有助于提升CMI；A、C、D都是低权重病例。","source":"医院管理通用概念"},{"id":33,"topic":"Phesgo","type":"single","stem":"关于乳腺癌皮下制剂（PH FDC SC）日间应用的真实世界结果，下面说法正确的是","options":["患者在院总时间相比静脉输注增加 78-89%","可节省医护操作时间，患者在院总时间可减少 78% 89%","皮下注射需要更长的院内输液观察时间","皮下制剂会显著增加药品之外的床位、护理、检查费用"],"answer":"B","explain":"山东省肿瘤医院时间-动作研究纳入300例辅助治疗患者，皮下双靶比双静脉在院时间减少78%–89%，单次平均节省3000秒以上。其余选项与研究结论方向相反。","source":"山东省肿瘤医院真实世界研究"},{"id":34,"topic":"皮下开关","type":"single","stem":"下面关于日间诊疗助力公立医院高质量发展的描述，错误的是","options":["日间诊疗可以把低权重维持治疗病例转出住院，优化住院病种结构","“日间 + 住院” 双轨协同模式，有助于在控费前提下提高医疗服务收入占比","所有肿瘤患者均适合直接纳入日间皮下制剂治疗，无需进行准入评估","日间医疗可缩短患者等待及治疗时长，提升患者满意度，对应国考满意度评价指标"],"answer":"C","explain":"日间皮下治疗有准入评估要求，要结合体能状态、病情和既往不良反应判断是否适合，并非所有肿瘤患者都能直接纳入，所以C错；A、B、D都是日间诊疗对医院管理的正面作用。","source":"医院管理通用概念"},{"id":35,"topic":"HR+","type":"single","stem":"HR+/HER2-晚期乳腺癌治疗 “三驾马车” 不包含以下哪一条通路","options":["ER 雌激素受体通路","CDK4/6 通路","PAM（PI3K/AKT/mTOR）通路","MAPK 通路"],"answer":"D","explain":"HR+/HER2-晚期乳腺癌耐药涉及ER、CDK4/6和PI3K/AKT/mTOR（PAM）三条相互串扰的通路，伊那利塞三联方案即同时阻断这三条通路。MAPK通路不在其中。","source":"伊赫莱产品资料（作用机制）"},{"id":36,"topic":"HR+","type":"single","stem":"伊那利塞的独特作用机制是","options":["单纯竞争性抑制AKT蛋白活性","高选择性抑制 + 降解 PI3Kα 突变体","抑制 mTOR 下游信号分子","降解 ER 雌激素受体蛋白"],"answer":"B","explain":"伊那利塞高选择性抑制PI3Kα（对α的选择性是β/γ/δ亚型的300倍以上），并只诱导突变型p110α降解，即「抑制+降解」。A是AKT抑制剂的思路，D是口服SERD的机制。","source":"伊赫莱产品资料（作用机制）"},{"id":37,"topic":"HR+","type":"single","stem":"INAVO120 研究中，伊那利塞联合哌柏西利 + 氟维司群组中位 PFS 数值为","options":["7.3 个月","11.1 个月","17.2 个月","34 个月"],"answer":"C","explain":"INAVO120最终分析三联组mPFS 17.2个月（对照组7.3个月，HR 0.42），为描述性更新，说明书收录的是主要分析15.0个月。34个月是中位OS。","source":"INAVO120最终分析（NEJM 2025）；伊赫莱说明书"},{"id":38,"topic":"HR+","type":"single","stem":"INAVO120 研究中伊那利塞联合方案针对的目标人群，以下描述正确的是","options":["HR+/HER2-，PIK3CA 野生型，内分泌敏感晚期乳腺癌","HR+/HER2-，PIK3CA 突变，内分泌耐药晚期乳腺癌","HR+/HER2+，PIK3CA 突变晚期乳腺癌","三阴性乳腺癌，PIK3CA 突变晚期乳腺癌"],"answer":"B","explain":"INAVO120入组的是PIK3CA突变、HR+/HER2-、辅助内分泌治疗期间或结束后12个月内复发（内分泌耐药）的晚期乳腺癌患者，晚期阶段未接受过系统治疗。","source":"INAVO120入组标准（伊赫莱说明书）"},{"id":39,"topic":"Phesgo","type":"multi","stem":"乳腺癌皮下制剂结合日间诊疗模式，可给医院、患者、医保带来哪些获益","options":["省空间：释放住院床日，床位可转向高 CMI 手术病例，提升科室手术占比","省时间：节约医生、护士人力时间，减少患者在院治疗总时长，利于患者回归社会","省费用：降低床位、护理、检查化验等非药品医疗费用，节约医保资金","完全消除药物所有不良反应，不需要开展出院随访"],"answer":"ABC","explain":"皮下双靶注射约5–8分钟，可由住院转为门诊或日间治疗，节省医护和患者时间，减少住院、耗材、配液等非药品支出。D错在仍有注射部位反应等不良反应，日间治疗后也要随访。","source":"赫双妥医保申报材料；赫双妥说明书；日间诊疗管理资料"},{"id":40,"topic":"皮下开关","type":"multi","stem":"在公立医院精细化管理、推动高质量发展的进程中，日间诊疗联合皮下制剂能够助力改善下列哪些国考 / 医院运营指标","options":["CMI 值、三四级手术占比","平均住院日、病床周转率","药占比、医疗服务收入占比","患者满意度评价"],"answer":"ABCD","explain":"日间皮下治疗把低权重维持治疗移出住院，腾出床位收治疑难重症，有助于提升CMI和三四级手术占比、缩短平均住院日、加快床位周转、优化药占比等收入结构，也能改善患者满意度。","source":"医院管理通用概念"},{"id":41,"topic":"HR+","type":"multi","stem":"关于 INAVO120 研究伊那利塞 + 哌柏西利 + 氟维司群方案，下列说法正确的有","options":["显著延长总生存期，mOS 达 34 个月，死亡风险降低 33%","ORR 达 62.7%，约为对照组的 2 倍","可显著推迟首次后续化疗时间至 35.6 个月","3 级及以上高血糖发生率为 6.8%，安全性可管理"],"answer":"ABCD","explain":"最终分析mOS 34.0个月（HR 0.67），ORR 62.7% vs 28.0%，至首次后续化疗35.6个月，≥3级高血糖6.8%（说明书按实验室值计3-4级为12.6%）。","source":"INAVO120最终分析（NEJM 2025）；伊赫莱说明书"},{"id":42,"topic":"HR+","type":"single","stem":"从生物学本质看，早期辅助内分泌治疗追求“功能性治愈”，其核心目标是？","options":["短期消灭全部肿瘤细胞","长期维持播散肿瘤细胞（DTCs）休眠，阻止其唤醒增殖","完全替代手术和放疗","使5年DFS率达到100%"],"answer":"B","explain":"早期辅助内分泌治疗难以短期清除全部残留肿瘤细胞，目标是长期抑制播散肿瘤细胞、使其保持休眠不再增殖，从而减少远期复发；它不能替代手术和放疗。","source":"出题人提供的资料（未单独核对出处）"},{"id":43,"topic":"HR+","type":"single","stem":"新型oSERD的核心作用机制不包括下列哪一项？","options":["强效拮抗ER","将ER固定在核基质上","诱导ER泛素化-蛋白酶体降解","直接抑制CDK4/6激酶活性"],"answer":"D","explain":"新型口服SERD（以吉雷司群为例）通过完全拮抗ER、把ER固定在细胞核内、再经泛素化降解ER三重作用阻断ER通路。直接抑制CDK4/6是哌柏西利等CDK4/6抑制剂的机制。","source":"吉雷司群作用机制文献（Cell Chem Biol 2026）","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":44,"topic":"HR+","type":"single","stem":"NATALEE研究中提示，接受CDK4/6i强化的患者中，可能属于“过度治疗”的比例约为？","options":["约10%","约30%","约81%","约95%"],"answer":"C","explain":"NATALEE中CDK4/6抑制剂强化带来的绝对iDFS获益有限，意味着大多数接受强化的患者不强化也不会复发，可能属于过度治疗，需按复发风险筛选强化人群。","source":"出题人提供的资料（未单独核对出处）"},{"id":45,"topic":"HR+","type":"multi","stem":"关于CDK4/6抑制剂（CDK4/6i）在早期乳腺癌中的局限，下列说法正确的有？","options":["仅阻滞细胞周期，不能清除上游促癌信号","RB1突变等耐药变异可在CDK4/6i暴露后出现","存在较多不良事件，影响长程依从性","联合AI可显著降低ERα蛋白水平，从而根除DTCs休眠状态"],"answer":"ABC","explain":"CDK4/6i只阻滞细胞周期，不清除上游促癌信号；暴露后可出现RB1突变等耐药改变，长期用药的不良事件也影响依从性。D项说联合AI可根除DTC休眠，不成立。","source":"出题人提供的资料（未单独核对出处）"},{"id":46,"topic":"HR+","type":"multi","stem":"关于 INAVO120 关键疗效数据，下列表述正确的有？","options":["主要终点 mPFS：17.2 vs 7.3 月，HR≈0.42","最终 OS：34.0 vs 27.0 月，HR≈0.67，P=0.02","ORR：62.7% vs 28%，但 CR 率两组无差异","亚组中，肝转移患者 PFS 获益消失，仅非肝转移获益"],"answer":"AB","explain":"A、B为最终分析结果：mPFS 17.2个月（描述性更新，说明书为主要分析15.0个月），mOS 34.0 vs 27.0个月。C的CR率结论无数据支持；肝转移等亚组均获益，D错。","source":"INAVO120最终分析（NEJM 2025）"},{"id":47,"topic":"皮下开关","type":"single","stem":"DRG 下日间 Phesgo 结余改善主要来自？","options":["药品费下降","非药成本下降","医保支付额提高","pCR 率提升"],"answer":"B","explain":"日间皮下治疗省去住院床日、静脉配液、输注耗材和部分护理时间，DRG结余改善主要来自这些非药成本下降；医保支付额按病组确定，不因剂型改变而提高，pCR是疗效指标而非成本。","source":"赫双妥医保申报材料、Manevy非药物成本研究（JCO 2021）；医院管理通用概念"},{"id":48,"topic":"Phesgo","type":"single","stem":"Phesgo 在新辅助 HER2+ 乳腺癌中的证据定位，最准确的是？","options":["pCR 显著优于静脉双靶","pCR 非劣，心脏毒性更低","pCR 非劣，心脏安全性相当","pCR 劣于静脉，不推荐新辅助"],"answer":"C","explain":"FeDeriCa的非劣效终点是第7周期帕妥珠单抗Ctrough，tpCR为59.7% vs 59.5%，两组相当；安全性与静脉双靶一致，不能说皮下心脏毒性更低。","source":"FeDeriCa研究；赫双妥说明书"},{"id":49,"topic":"皮下开关","type":"single","stem":"医院药学部评估皮下抗肿瘤制剂准入时，最应优先考量的指标是？","options":["单支药品采购价是否低于静脉剂型","是否纳入国家集采","临床净获益及全路径成本（含耗材、人力、床位、时间）","厂家返利与赠药政策"],"answer":"C","explain":"准入评估应看临床净获益和全路径成本，把耗材、人力、床位和时间一并算进去；只比单支价格或只看是否集采都不全面，返利和赠药不能作为准入依据。","source":"医院管理通用概念"},{"id":50,"topic":"Phesgo","type":"single","stem":"PHaTiMa 真实世界研究中，PH FDC 皮下相较静脉双靶的时间节约，正确的是？","options":["患者座椅/治疗室时间节省约 50%，护理人员总活动时间节省约 30%，药房准备时间无显著变化","患者座椅时间节省约 63%，HCP 总活动时间节省约 50%，其中护理人员节省约 53.8%、药房节省约 29.8%","患者座椅时间节省约 63%，医生开方决策时间节省约 50%，护理人员节省约 29.8%、药房节省约 53.8%","患者与护理时间均节省约 60% 以上，药房因需核对皮下制剂特殊耗材，准备时间反而增加约 15%"],"answer":"B","explain":"PHaTiMa中赫双妥比静脉双靶明显缩短患者椅位时间和医护操作时间：患者椅位时间每周期减少75%，医护操作时间由46.5分钟降到23.6分钟（减少49.3%）。","source":"PHaTiMa研究","fixnote":"原表未填题型，按单一答案定为单选","check":"PHaTiMa公开数据是患者椅位时间减少75%、医护操作时间减少49.3%，与B项的63%、53.8%、29.8%不一致，B项数字待出题人核对。"},{"id":51,"topic":"Phesgo","type":"multi","stem":"关于 PH FDC SC（皮下双靶），正确的有","options":["帕妥珠与曲妥珠均按固定剂量给药，无需依据 BSA 调整","FeDeriCa 研究以稳态峰浓度 C_{\\max} 作为主要 PK 非劣终点","皮下给药心脏安全性更优，LVEF 监测频率可适当放宽","新辅助 tpCR 及（新）辅助疗效与静脉双靶相当"],"answer":"AD","explain":"赫双妥固定剂量、不按体重给药；FeDeriCa tpCR 59.7% vs 59.5%，与静脉相当。B错在主要终点是Ctrough而非Cmax，C错在仍需定期监测LVEF。","source":"赫双妥说明书；FeDeriCa研究","fixnote":"原表标单选但答案为AD，改为多选"},{"id":52,"topic":"皮下开关","type":"single","stem":"根据\"以患者为中心日间诊疗新范式\"的内容，传统\"以疾病为中心\"模式下，医院端面临的主要痛点是什么？","options":["患者就医便捷性不足，预约等待时间长","医保支付压力大，住院模式总费用高于日间模式","资源分配结构冲突，床位资源错配，需将资源从\"低效占用\"转向\"高效周转\"","患者心理经济负担重，长期住院带来焦虑和恐惧"],"answer":"D","explain":"传统模式下维持治疗也要反复住院，患者既担心病情，又承受住院带来的经济和心理压力，新范式把这类治疗转到日间完成，以减轻这部分负担。","source":"出题人提供的资料（未单独核对出处）","check":"题干问的是医院端痛点，C项（床位资源错配）更贴题，D项讲的是患者端感受，答案待出题人核对。"},{"id":53,"topic":"Phesgo","type":"single","stem":"曲妥珠单抗皮下制剂（H-SC）从\"灵活体重给药\"到\"固定剂量给药\"的转化过程中，最终确定的固定剂量是多少？该剂量是基于什么方法确定的？","options":["400mg，基于III期临床试验确定","500mg，基于动物实验确定","600mg，基于群体药代动力学（PopPK）模型确定","700mg，基于Meta分析确定"],"answer":"C","explain":"曲妥珠单抗皮下制剂从按体重给药改为固定600 mg，这一剂量依据群体药代动力学（PopPK）模型确定，用建模结果代替按体重逐例计算。","source":"出题人提供的资料（未单独核对出处）"},{"id":54,"topic":"Phesgo","type":"single","stem":"FeDeriCa研究评估的是哪种皮下制剂对比静脉方案的疗效和药代动力学？","options":["曲妥珠单抗单药皮下制剂（H-SC）对比曲妥珠单抗静脉（H-IV）","帕妥珠单抗皮下制剂对比帕妥珠单抗静脉","T-DM1皮下制剂对比T-DM1静脉","曲妥珠单抗联合帕妥珠单抗固定剂量皮下制剂（PH FDC SC）对比双静脉（P-H IV）"],"answer":"D","explain":"FeDeriCa是全球III期随机研究，在HER2阳性早期乳腺癌新辅助和辅助治疗中比较赫双妥与静脉帕妥珠单抗+曲妥珠单抗。A项是单药曲妥珠单抗皮下制剂的研究内容。","source":"FeDeriCa研究"},{"id":55,"topic":"Phesgo","type":"single","stem":"根据CLEOPATRA研究，HPT（曲妥珠单抗+帕妥珠单抗+多西他赛）方案作为HER2阳性晚期乳腺癌一线治疗，总体人群的中位总生存期（mOS）达到了多少个月？","options":["40.8个月","57.1个月","65.3个月","18.7个月"],"answer":"B","explain":"CLEOPATRA终版分析中，HPT组中位OS为57.1个月，对照组为40.8个月（HR 0.69）。18.7个月是HPT组的中位PFS，容易与OS混淆。","source":"CLEOPATRA研究"},{"id":56,"topic":"Phesgo","type":"multi","stem":"皮下制剂相比静脉制剂的三省价值包括？","options":["省时间：医生节省7.5小时，护士节省25.2小时","省空间：全疗程释放32个住院床日","省钱：单患者节省11.5万医疗费用","为社会带来5,560元生产力获益"],"answer":"ABCD","explain":"皮下制剂的价值可概括为省时间、省空间、省钱和社会获益：节省医护工作时间，释放住院床日，减少医疗费用，并减少患者因治疗占用的工作时间。","source":"出题人提供的资料（未单独核对出处）"},{"id":57,"topic":"HR+","type":"single","stem":"PIK3CA突变在乳腺癌中的特征是什么？","options":["仅存在于转移灶","具有主干突变特征，原发肿瘤中存在且疾病进展时持续存在","仅在内分泌治疗后出现","与ESR1突变共存"],"answer":"B","explain":"PIK3CA突变具有主干突变特征，原发肿瘤中即已存在，疾病进展时仍持续存在，不是只在转移灶或内分泌治疗后才出现。","source":"出题人提供的资料（未单独核对出处）"},{"id":59,"topic":"HR+","type":"single","stem":"CDK4/6i耐药后，CDK2通路激活的机制是什么？","options":["直接抑制Rb","对Rb进行替代磷酸化，绕过CDK4/6抑制","抑制ER通路","激活PI3K"],"answer":"B","explain":"CDK4/6被抑制后，CDK2通路激活可对Rb进行替代磷酸化，让细胞周期继续推进，从而绕过CDK4/6i的阻滞。","source":"出题人提供的资料（未单独核对出处）"},{"id":60,"topic":"HR+","type":"multi","stem":"三通路机制中，CDK4/6i耐药的旁路激活机制包括？","options":["CDK2表达上调，对Rb替代磷酸化","PI3K激活突变，触发CDK2非典型活性","RTKs信号激活（FGFR等）","PTEN缺失促进PI3K通路耐药"],"answer":"ABCD","explain":"CDK4/6i耐药的旁路激活包括：CDK2上调替代磷酸化Rb，PI3K激活突变触发CDK2非典型活性，FGFR等RTK信号激活，以及PTEN缺失推动PI3K通路耐药，四项均对。","source":"出题人提供的资料（未单独核对出处）"},{"id":61,"topic":"HR+","type":"multi","stem":"Giredestrant（新一代口服SERD）的特点包括？","options":["强效完全ER拮抗剂","皮摩尔级超强效价","仅需30mg低剂量","lidERA研究显示IDFS显著改善"],"answer":"ABCD","explain":"吉雷司群是新一代口服SERD、完全ER拮抗剂，ERα拮抗IC50为0.05 nM（50 pM），30 mg每日一次口服；lidERA中IDFS HR 0.70、p=0.0014，显著改善。","source":"吉雷司群机制研究；lidERA（SABCS 2025）","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":62,"topic":"HR+","type":"single","stem":"伊那利塞因不良反应需要减量时，说明书推荐的剂量调整顺序是？","options":["9 mg → 6 mg → 3 mg，3 mg仍不能耐受则永久停药","9 mg → 7.5 mg → 6 mg → 4.5 mg","9 mg → 4.5 mg，仍不能耐受则改为隔日服药","不允许减量，出现不良反应只能暂停或停药"],"answer":"A","explain":"说明书的减量阶梯是9 mg→6 mg（2片3 mg）→3 mg，3 mg仍不能耐受则永久停药。中度、重度肾损害的起始剂量分别为6 mg、3 mg，别与减量阶梯混淆。","source":"伊赫莱说明书"},{"id":63,"topic":"HR+","type":"single","stem":"处理伊那利塞相关高血糖时，胰岛素放在最后考虑、磺脲类常规不推荐，主要原因是？","options":["胰岛素和磺脲类会与伊那利塞发生CYP3A4相互作用","外源胰岛素或促胰岛素分泌会升高胰岛素水平，经反馈重新激活PI3K/AKT通路，理论上削弱抗肿瘤疗效","这类降糖药会加重口腔黏膜炎","这类降糖药医保不能报销"],"answer":"B","explain":"伊那利塞致高血糖时本已伴代偿性高胰岛素血症，外源胰岛素或促胰岛素分泌会进一步升高胰岛素，可能重新激活PI3K/AKT通路，因此共识把胰岛素放在最后、常规不推荐磺脲类。","source":"2026版乳腺癌PI3K/AKT抑制剂相关高血糖管理中国专家共识"},{"id":64,"topic":"HR+","type":"single","stem":"HR+/HER2-晚期乳腺癌患者血浆ctDNA检测未检出PIK3CA突变，下一步最恰当的做法是？","options":["判定为PIK3CA野生型，不再考虑PI3Kα抑制剂","3个月后再抽一次血复查","有条件时用肿瘤组织（转移灶或原发灶）再检测，避免ctDNA假阴性漏筛","不等检测结果，直接按经验使用伊那利塞三联"],"answer":"C","explain":"2025版共识推荐组织优先、ctDNA补充。血浆未检出PIK3CA突变不能直接判为野生型，有条件时应取转移灶或原发灶组织再检，避免漏筛。","source":"2025版PIK3CA检测共识"},{"id":65,"topic":"HR+","type":"single","stem":"关于伊那利塞相关口腔黏膜炎，下列做法正确的是？","options":["出现症状后改用含酒精的漱口水加强消毒","一旦发生口腔黏膜炎即永久停药","最初出现口腔黏膜炎体征时即开始使用不含酒精的皮质类固醇漱口水，并避免辛辣饮食","口腔黏膜炎多在用药半年后出现，前3个月无需关注"],"answer":"C","explain":"说明书建议口腔黏膜炎一出现体征就用不含酒精的皮质类固醇漱口水，并调整饮食、避免辛辣。它首次发生的中位时间约13天，多见于用药早期；仅4级才永久停药。","source":"伊赫莱说明书"},{"id":66,"topic":"HR+","type":"multi","stem":"关于伊那利塞与卡匹色替的区隔，下列说法正确的有？（多选）","options":["伊那利塞每日一次连续口服；卡匹色替400 mg每日两次、服4天停3天","卡匹色替适用于AKT1或PTEN任一改变的人群，伊那利塞针对PIK3CA突变","伊那利塞在抑制PI3Kα的同时可选择性降解突变型p110α，卡匹色替为泛AKT抑制剂","两药的注册研究均为联合CDK4/6抑制剂和氟维司群的三联方案"],"answer":"ABC","explain":"伊那利塞每日一次连续服，抑制PI3Kα并降解突变型p110α；卡匹色替是泛AKT抑制剂，400 mg每日两次、服4天停3天。D错：三联方案是INAVO120的设计。","source":"伊赫莱说明书；CAPItello-291研究资料","check":"B项只写了AKT1或PTEN改变；CAPItello-291的研究人群是PIK3CA、AKT1、PTEN任一改变，区隔时要说完整。"},{"id":67,"topic":"Phesgo","type":"single","stem":"赫双妥®负荷剂量和维持剂量皮下注射结束后，说明书建议的观察时间分别是？","options":["均无需观察，注射后即可离开","30分钟 / 15分钟","60分钟 / 30分钟","15分钟 / 5分钟"],"answer":"B","explain":"说明书要求负荷剂量给药期间及给药后观察30分钟，维持剂量给药期间及给药后观察15分钟，重点观察注射相关反应和超敏反应，观察结束后再开始化疗。","source":"赫双妥说明书"},{"id":68,"topic":"Phesgo","type":"single","stem":"正在使用赫双妥®的患者，两次连续给药间隔达到或超过6周，正确的处理是？","options":["直接给予维持剂量（帕妥珠单抗600 mg + 曲妥珠单抗600 mg），之后每3周一次","重新给予负荷剂量（帕妥珠单抗1200 mg + 曲妥珠单抗600 mg），之后每3周给予维持剂量","改回静脉双靶重新开始","维持剂量加倍，补足漏用的部分"],"answer":"B","explain":"说明书规定两次给药间隔≥6周时，重新给予负荷剂量1200 mg+600 mg，之后每3周给维持剂量；间隔<6周才是尽快补打维持剂量，说明书没有加倍补量的做法。","source":"赫双妥说明书"},{"id":69,"topic":"皮下开关","type":"single","stem":"广州孙逸仙纪念医院真实世界研究中，HER2+患者双靶治疗由住院静脉转为门诊皮下，18个周期全疗程约可释放多少个住院床日？","options":["约8个","约18个","约32个","约60个"],"answer":"C","explain":"住院静脉双靶每个周期都要占用住院床位，转为门诊皮下注射后不再占床，按全疗程累计可释放相当数量的住院床日，腾出的床位可用于收治其他患者。","source":"出题人提供的资料（未单独核对出处）"},{"id":70,"topic":"皮下开关","type":"multi","stem":"与医院管理者或科主任沟通“皮下开关”时，下列做法正确的有？（多选）","options":["先了解科室今年被考核的指标、现状与缺口，再选一项切入","把临床语言转换成运营语言，如转门诊/日间后出院患者手术占比、CMI的变化","重点强调赫双妥药品单价一定低于静脉方案","提出用医院自己的数据测算转皮下后的CMI、出院人次、平均住院日变化"],"answer":"ABD","explain":"与院管沟通要先摸清科室考核指标和缺口，把临床获益换成CMI、住院日等运营语言，再用医院自己的数据测算；C强调药品单价「一定」更低，既是评价价格又是绝对化表述，不合规。","source":"医院管理通用概念；医药代表合规要求"},{"id":71,"topic":"Phesgo","type":"multi","stem":"关于赫双妥®的给药规范，下列说法正确的有？（多选）","options":["一次剂量应用一个注射器在同一部位完成，不得分两个部位注射","与紫杉类药物联合时，应在紫杉类药物给药前给予赫双妥","与蒽环类药物联合时，可在同一天与蒽环类同时给药","目前接受帕妥珠单抗联合曲妥珠单抗静脉给药的患者可换用赫双妥"],"answer":"ABD","explain":"说明书规定一次剂量不能分到两个注射器或两个部位，与紫杉类联用时先给赫双妥，正在用静脉双靶的患者可换用赫双妥。C错在须等蒽环类全部用完后才给赫双妥。","source":"赫双妥说明书"},{"id":72,"topic":"Phesgo","type":"multi","stem":"专家共识指出，抗肿瘤皮下制剂可为“以患者为中心”的日间诊疗模式赋能，其“三省”价值包括？（多选）","options":["省时：缩短等待及给药时间，5-8分钟即可完成皮下注射","省钱：减少药品及住院相关费用，节约医保基金支出","省空间：释放床位资源、提高床位周转率，优化病种结构并助力CMI提升","省检查：转为皮下给药后无需再进行LVEF心脏功能监测"],"answer":"ABC","explain":"专家共识把皮下制剂对日间诊疗的价值归纳为省时、省钱、省空间：给药快、减少药品及住院相关费用、释放床位并优化病种结构。D错在转为皮下后仍需定期评估LVEF。","source":"出题人提供的资料（未单独核对出处）"},{"id":73,"topic":"HR+","type":"single","stem":"III期lidERA研究中，吉雷司群（伊赫达®）单药辅助治疗HR+/HER2-早期乳腺癌，较标准内分泌治疗3年复发/死亡风险显著降低（HR=0.70），其3年iDFS结果为？","options":["92.4% vs 89.6%","90.3% vs 84.6%","88.8% vs 83.4%","93.5% vs 90.1%"],"answer":"A","explain":"lidERA中位随访32.3个月时，吉雷司群组3年IDFS为92.4%，标准内分泌治疗组为89.6%，绝对差2.8%。易混的2年IDFS为94.6% vs 92.3%。","source":"lidERA（SABCS 2025）","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":74,"topic":"HR+","type":"multi","stem":"关于吉雷司群（伊赫达®）的作用机制与用药特点，下列说法正确的有？（多选）","options":["独特“分子钳”三重机制：完全拮抗、强力固定、深度降解，从源头阻断ER通路","30mg每日一次口服，饭前饭后均可，无需额外血常规/肝肾功能监测","lidERA研究中因不良反应停药率5.3%，低于标准内分泌治疗的8.2%","用药期间需像瑞波西利一样定期监测心电图，以警惕QTc间期延长"],"answer":"ABC","explain":"吉雷司群完全拮抗ER，把ER固定在核内并促其降解；lidERA中30 mg每日一次、饭前饭后均可，因AE停药5.3% vs 8.2%。D错，吉雷司群需特别关注的是心动过缓。","source":"吉雷司群机制研究；lidERA（SABCS 2025）","check":"B项「无需额外血常规/肝肾功能监测」目前没有说明书依据（吉雷司群在中国尚未获批），讲解时不要引用。","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":75,"topic":"HR+","type":"single","stem":"INAVO120研究中，伊那利塞联合哌柏西利+氟维司群三联方案一线治疗PIK3CA突变、内分泌耐药HR+/HER2-晚期乳腺癌，其总生存（OS）结果为？","options":["mOS 34个月 vs 27个月，HR=0.67（死亡风险降低33%）","mOS 30.0个月 vs 24.0个月，HR=1.44","mOS 21.0个月 vs 7.3个月，HR=0.38","mOS 34.9个月 vs 27.0个月，HR=0.72"],"answer":"A","explain":"INAVO120最终分析mOS 34.0 vs 27.0个月，HR 0.67，死亡风险降低33%，已写入新版说明书。C、D分别混入了高血糖事后亚组的PFS和OS数字。","source":"伊赫莱说明书；INAVO120最终分析（NEJM 2025）"},{"id":76,"topic":"HR+","type":"single","stem":"INAVO121研究旨在攻克CDK4/6i经治难题，其头对头比较的两组方案是？","options":["伊那利塞+赫双妥 vs 安慰剂+赫双妥","伊那利塞+哌柏西利+氟维司群 vs 安慰剂+哌柏西利+氟维司群","伊那利塞+CDK4/6抑制剂+来曲唑 vs 安慰剂+CDK4/6抑制剂+来曲唑","伊那利塞+氟维司群 vs 阿培利司+氟维司群"],"answer":"D","explain":"INAVO121在用过CDK4/6i的患者中比较伊那利塞+氟维司群与阿培利司+氟维司群。A是INAVO122（HER2阳性一线维持），B是INAVO120，C是INAVO123。","source":"INAVO121研究设计（在研III期）"},{"id":77,"topic":"HR+","type":"single","stem":"关于伊那利塞的安全性与患者筛选管理，下列说法正确的是？","options":["常见不良反应包括中性粒细胞减少、口腔黏膜炎、腹泻等，且多数为3/4级","治疗期间无需监测血糖，一旦发生高血糖必须永久停药","高血糖是PI3Kα抑制剂的“在靶”类效应，治疗期间需监测血糖；用药前需采用充分验证的检测方法确认PIK3CA突变状态","因不良事件导致的伊那利塞停药率高达29%，需常规预防性减量"],"answer":"C","explain":"高血糖是PI3Kα抑制的中靶效应，治疗期间需按规定监测血糖、分级处理；用药前须用经批准或充分验证的方法确认PIK3CA突变。口腔黏膜炎、腹泻以1–2级为主，说明书AE停药率6%。","source":"伊赫莱说明书"},{"id":78,"topic":"Phesgo","type":"single","stem":"下列关于赫双妥®（帕妥珠曲妥珠单抗皮下注射液，皮下双靶）与传统静脉双靶（帕妥珠单抗+曲妥珠单抗静脉输注）的对比，属于二者不同点的是？","options":["组成药物不同","给药途径与单次给药时长不同——赫双妥经大腿皮下注射，负荷剂量注射约 8 分钟、维持剂量约 5 分钟（分别观察 30 分钟、15 分钟）；传统静脉双靶需序贯静脉输注，单次输注约 3–4 小时并占用床位/输注椅，皮下制剂可显著省时间、省空间并节约医保支出","适应症与心脏监测要求不同——赫双妥用于 HER2 阴性患者且用药前无需评估 LVEF，静脉双靶用于 HER2 阳性患者并需监测心功能","疗效与给药周期不同——赫双妥疗效优于静脉双靶并可替代化疗，静脉双靶需每 2 周给药一次"],"answer":"B","explain":"两者组成药物相同，区别在给药途径和时长：赫双妥大腿皮下注射，负荷约8分钟、维持约5分钟，分别观察30、15分钟；静脉双靶需序贯输注。C、D的说法都不成立。","source":"赫双妥说明书；帕捷特说明书","check":"静脉双靶输注时长各资料口径不一（医保申报材料写60–150分钟），对医生讲时以说明书和本院实际为准。"},{"id":79,"topic":"Phesgo","type":"single","stem":"根据赫双妥®说明书，下列关于其适应症与患者选择的描述，正确的是？","options":["用于HER2阳性乳腺癌，HER2阳性定义为IHC 3+或ISH比值≥2.0；转移性乳腺癌需与多西他赛联合，适用于既往未接受过针对转移性乳腺癌抗HER2治疗或化疗的患者","可单药用于HER2阴性乳腺癌的术后辅助治疗","治疗转移性乳腺癌时可与蒽环类药物同期联合使用","适用于既往已接受过针对转移性乳腺癌抗HER2治疗失败患者的二线治疗"],"answer":"A","explain":"说明书限定用于HER2阳性（IHC 3+或ISH≥2.0）乳腺癌，晚期一线须联合多西他赛，且转移阶段未用过抗HER2治疗或化疗。赫双妥要在蒽环类用完后才给，也未获批二线。","source":"赫双妥说明书"},{"id":80,"topic":"Phesgo","type":"multi","stem":"结合推广资料与真实世界数据，关于乳腺癌双靶皮下制剂（赫双妥®）相较传统静脉方案的价值，下列说法正确的有？（多选）","options":["皮下与静脉方案疗效相当、安全性相似；固定剂量、无需配液，可降低人为配置错误风险","给药时间由传统静脉输注的3-4小时缩短至5-8分钟，可释放床位资源、提高床位周转率并优化病种结构、助力CMI提升","全疗程可释放约32个住院床日，节省药品及非药品医疗费用，节约医保基金","转为皮下给药后无需评估左心室射血分数（LVEF），也无需关注胚胎-胎儿毒性风险"],"answer":"ABC","explain":"FeDeriCa显示皮下与静脉疗效相当、安全性一致；赫双妥固定剂量、无需配液，注射约5–8分钟，可释放床位、减少费用。D错在说明书仍要求评估LVEF并警示胚胎-胎儿毒性。","source":"FeDeriCa研究；赫双妥说明书；赫双妥医保申报材料","check":"静脉输注时长、32个床日等数字各资料口径不一，对医生讲时注明出处，并以本院数据为准。"},{"id":81,"topic":"皮下开关","type":"single","stem":"下列关于公立医院绩效考核与DRG/DIP运营指标的表述，正确的是？","options":["时间消耗指数=本院该病组平均住院日÷区域平均住院日，>1说明住院日偏长、床位周转偏慢","CMI=出院病例数÷总权重，数值越高代表收治病例整体越轻","费用消耗指数<1，说明本院该病组成本控制弱于区域平均水平","四级手术占比=四级手术台数÷出院患者总人数"],"answer":"A","explain":"时间消耗指数是本院病组平均住院日与区域水平之比，大于1说明住院日偏长、周转偏慢。B把CMI分子分母写反；C费用消耗指数小于1说明成本控制好于区域；D分母应为出院患者手术台次。","source":"医院管理通用概念"},{"id":82,"topic":"Phesgo","type":"single","stem":"患者已接受赫双妥®（帕妥珠曲妥珠单抗注射液（皮下注射））负荷剂量给药，本次为维持剂量（每3周一次）给药。关于维持剂量给药，下列正确的是：","options":["皮下注射约8分钟，给药后观察30分钟","皮下注射约5分钟，给药后观察30分钟","皮下注射约8分钟，给药后观察15分钟","皮下注射约5分钟，给药后观察15分钟"],"answer":"D","explain":"说明书规定维持剂量每3周一次，皮下注射约5分钟，给药后观察15分钟；注射约8分钟、观察30分钟对应的是首次负荷剂量。","source":"赫双妥说明书"},{"id":83,"topic":"Phesgo","type":"single","stem":"患者因故延迟赫双妥®给药。按照说明书，正确的处理是：","options":["两次给药间隔＜6周，应重新给予负荷剂量","无论间隔多久，均仅需补充维持剂量","两次给药间隔≥6周，应尽快给予维持剂量","两次给药间隔＜6周，应尽快给予维持剂量；间隔≥6周，应重新给予负荷剂量"],"answer":"D","explain":"说明书规定延迟或漏打时，两次给药间隔<6周应尽快补打维持剂量，不要等到下次计划时间；间隔≥6周则重新给负荷剂量，之后每3周给维持剂量。","source":"赫双妥说明书"},{"id":84,"topic":"皮下开关","type":"single","stem":"2025 SABCS公布的山东省肿瘤医院日间病房真实世界研究（PS3-11-08，时间-动作分析）中，PH FDC SC（赫双妥皮下制剂）对比双静脉方案的患者结局是：","options":["患者在院总时间减少45%–60%，单次平均节省约20分钟","患者在院总时间减少78%–89%（p＜0.001），单次治疗平均节省＞3000秒（约50分钟）","患者在院总时间减少90%–95%，单次平均节省约2小时","两组在院总时间无显著差异"],"answer":"B","explain":"山东省肿瘤医院日间病房时间-动作研究纳入300例辅助治疗患者，赫双妥皮下比双静脉方案在院时间少78%–89%，单次平均节省超过3000秒。","source":"山东省肿瘤医院日间病房真实世界研究（SABCS 2025 PS3-11-08）"},{"id":85,"topic":"HR+","type":"single","stem":"关于Giredestrant（吉雷司群），下列描述正确的是：","options":["新一代口服SERD（完全雌激素受体拮抗剂和降解剂），III期研究选定剂量为30 mg每日一次口服","静脉给药的选择性雌激素受体调节剂（SERM），每周给药一次","口服SERD，仅对ESR1突变的患者有效","口服给药，III期研究选定剂量为100 mg每日一次"],"answer":"A","explain":"吉雷司群是新一代口服SERD，兼具完全拮抗和降解ER的作用，III期lidERA用30 mg每日一次口服。lidERA纳入的是ER+/HER2−早期患者，不限于ESR1突变，C错。","source":"lidERA（SABCS 2025）","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":86,"topic":"HR+","type":"single","stem":"III期lidERA BC研究（Giredestrant vs 标准内分泌治疗，辅助治疗ER+/HER2-早期乳腺癌，N=4170）的主要终点IDFS结果为：","options":["HR 0.89（p=0.1553），未达预设统计学显著性","HR 0.81（p=0.1757），未达统计学显著性","分层HR 0.70（0.57–0.87），p=0.0014，风险降低30%；3年IDFS率92.4% vs 89.6%","ITT人群PFS HR 0.56（0.44–0.71）"],"answer":"C","explain":"lidERA的IDFS分层HR 0.70，p=0.0014，风险降低30%，3年IDFS 92.4% vs 89.6%。A是persevERA，B是acelERA，D是evERA的PFS。","source":"lidERA（SABCS 2025）","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":87,"topic":"Phesgo","type":"multi","stem":"关于赫双妥®（帕妥珠曲妥珠单抗注射液（皮下注射））的使用，下列说法正确的有：","options":["仅用于大腿皮下给药，请勿静脉给药；左右大腿交替注射，新注射部位距既往部位至少2.5 cm","与多西他赛联合时，应在赫双妥给药前给予紫杉类药物；应完成完整蒽环类治疗方案后再给予赫双妥","一次剂量可分装于两个注射器、在两个注射部位分别给药，以减轻注射不适","有生育能力的女性（包括男性患者的伴侣）应在治疗期间及末次给药后7个月内采取有效避孕措施"],"answer":"AD","explain":"赫双妥仅用于大腿皮下注射，不能静脉给药，左右交替、距上次注射点至少2.5 cm；治疗期间及末次给药后7个月内需避孕。B写反了，应先给赫双妥；C错在一次剂量不能分开注射。","source":"赫双妥说明书；赫双妥皮下注射护理资料","fixnote":"原表答案ABD；说明书要求赫双妥在紫杉类之前给药，B项写反，改为AD"},{"id":88,"topic":"HR+","type":"multi","stem":"关于Giredestrant（吉雷司群）已公布研究结果，下列正确的有：","options":["lidERA BC：3年IDFS率92.4% vs 89.6%，因不良事件停药率更低（5.3% vs 8.2%）","coopERA BC：新辅助第2周Ki67几何平均相对降幅-75%，优于阿那曲唑的-67%（P=0.0433）","evERA BC：ESR1突变人群INV-PFS为9.99个月 vs 5.45个月（HR 0.38，p＜0.0001），疾病进展或死亡风险降低62%","persevERA BC（GIRE+哌柏西利 vs 来曲唑+哌柏西利，1L）：INV-PFS达到预设统计学显著性，成功主要终点"],"answer":"ABC","explain":"A、B、C与lidERA、coopERA、evERA已公布数据一致。D错，persevERA未达主要终点（HR 0.89，p=0.1553）。","source":"lidERA（SABCS 2025）；coopERA；evERA（ESMO 2025）；persevERA（ASCO 2026）","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":89,"topic":"皮下开关","type":"multi","stem":"关于肿瘤日间医疗与皮下制剂的应用，下列正确的有：","options":["日间医疗适用患者的准入条件原则上包括ECOG评分0～1分、年龄＜75岁（可适当放开）、同意24小时内出院","日间医疗结束后1周内至少随访1次，重点患者应加强随访次数","北京某医院2025年1–3月累计完成PHESGO皮下注射616人次，省时比率约90.95%","广州孙逸仙医院研究：皮下方案较静脉方案全疗程节省32.22个床日、约11.5万元医疗费用/患者"],"answer":"ABCD","explain":"日间医疗有明确的患者准入条件和治疗后随访要求，国内多家医院的日间实践也显示皮下制剂能缩短治疗时间、减少住院床日，四项表述均正确。","source":"出题人提供的资料（未单独核对出处）","check":"D项是单中心测算数据，讲时注明出处，不对具体患者承诺费用节省。"},{"id":90,"topic":"Phesgo","type":"single","stem":"关于赫双妥®（帕妥珠曲妥珠单抗注射液（皮下注射））的疗效验证与患者偏好研究数据，下列正确的是：","options":["FEDERICA研究：赫双妥组tpCR为55.6%，静脉组为56.4%（率差异-0.88）","FDChina研究显示皮下组tpCR显著优于静脉组（p＜0.05）","FEDERICA研究tpCR为59.7% vs 59.5%（率差异0.15）；FDChina研究中200例中国患者tpCR为55.6% vs 56.4%，未发现新的安全性信号","PHRANCESCA研究中85%患者首选皮下制剂，最常见原因是避免静脉通路"],"answer":"C","explain":"FeDeriCa tpCR 59.7% vs 59.5%；FDChina 200例中国患者tpCR 55.6% vs 56.4%，未见新安全性信号。D错，首要偏好原因是门诊时间短。","source":"FeDeriCa研究；FDChina研究；PHranceSCa研究"},{"id":91,"topic":"HR+","type":"single","stem":"2026 ESMO公布的MORPHEUS乳腺癌研究中，Giredestrant（吉雷司群）联合伊那利塞（inavolisib，商品名：伊赫莱®）治疗PIK3CA突变患者（N=40）的最新中期分析，下列正确的是：","options":["总体人群中位PFS为5.6个月，PIK3CA/ESR1双突变人群中位PFS为4.67个月","总体人群确认ORR为45.0%，PIK3CA/ESR1双突变人群确认ORR达71.4%，总体人群中位PFS为10.3个月","最常见的治疗相关不良事件为中性粒细胞减少症（60.0%）","双突变人群确认ORR为26.6%，与总体人群基本一致"],"answer":"B","explain":"MORPHEUS中吉雷司群联合伊那利塞在PIK3CA突变患者中缓解率较高，合并ESR1突变者更高，D项说两者基本一致不对；26.6%是evERA中ESR1突变人群的ORR，易混。","source":"MORPHEUS BC研究","check":"已收录的MORPHEUS数据为ORR 40.0%、合并ESR1突变77.0%、mPFS 9.5个月，与B项数字不一致（可能是不同数据截点），待出题人核对；该联合方案仍在研究阶段。","caution":"吉雷司群在中国尚未获批，以上为研究数据，仅限内部学习，不作推广使用。"},{"id":92,"topic":"Phesgo","type":"single","stem":"曲妥珠单抗皮下制剂（H‑SC）固定剂量600mg，是基于以下哪项研究的群体药代动力学建模确定","options":["BO30185","BP22023","FeDeriCa","HannaH"],"answer":"B","explain":"题目答案为BP22023研究：曲妥珠单抗皮下制剂的600 mg固定剂量，是基于该研究数据做群体药代动力学建模后确定的。","source":"出题人提供的资料（未单独核对出处）"},{"id":93,"topic":"Phesgo","type":"single","stem":"PHESGO（PH FDC SC）维持剂量的组成为","options":["帕妥珠600mg+曲妥珠600mg +2000 U/mL rHuPH20","帕妥珠1200mg+曲妥珠600mg +2000 U/mL rHuPH20","帕妥珠600mg+曲妥珠600mg +667 U/mL rHuPH20","帕妥珠1200mg+曲妥珠1200mg +2000 U/mL rHuPH20"],"answer":"A","explain":"维持剂量（10 ml）含帕妥珠单抗600 mg、曲妥珠单抗600 mg和rHuPH20 20000单位，即2000 U/ml。B项的抗体剂量对应负荷剂量，C项酶浓度不对。","source":"赫双妥说明书（2023年版）"},{"id":94,"topic":"Phesgo","type":"single","stem":"大分子皮下给药时，多大分子量的分子主要经淋巴管吸收","options":["MW＞1000Da","MW＞16000Da","MW＜1000Da","MW＜16000Da"],"answer":"B","explain":"大分子单抗皮下注射后主要经毛细淋巴管吸收，再经腹股沟淋巴结、胸导管进入血液；曲妥珠单抗145 kDa、帕妥珠单抗148 kDa，都属于经淋巴吸收的大分子。","source":"赫双妥产品学术资料","check":"资料中一般写分子量大于约20 kDa的分子主要经淋巴吸收，B项「>16000 Da」待出题人核对；B仍是四项中唯一方向正确的。"},{"id":95,"topic":"Phesgo","type":"multi","stem":"关于重组人透明质酸酶rHuPH20作用说法正确的有","options":["暂时解聚皮下透明质酸，提升皮下组织渗透性","可增大皮下给药体积，支持大分子单抗大体积SC给药","可提升药物吸收速率、生物利用度，降低PK个体变异","只能用于曲妥珠单抗，不能用于帕妥珠单抗"],"answer":"ABC","explain":"rHuPH20暂时降解皮下透明质酸、提高组织渗透性，突破皮下小体积给药限制，动物研究中生物利用度由59%升到94%。赫双妥里帕妥珠单抗和曲妥珠单抗共用这一辅料，D错。","source":"赫双妥说明书；赫双妥产品学术资料"},{"id":98,"topic":"HR+","type":"single","stem":"HR阳性乳腺癌中PIK3CA最主要的突变发生在哪两个外显子？","options":["7、8号外显子","8、11号外显子","9、20号外显子","4、7号外显子"],"answer":"C","explain":"HR阳性乳腺癌中PIK3CA突变主要集中在9号和20号外显子，这两个热点区域是检测时必须覆盖的重点。","source":"出题人提供的资料（未单独核对出处）"},{"id":99,"topic":"HR+","type":"single","stem":"INAVO120研究中伊那利塞+哌柏西利+氟维司群组更新后的中位PFS为多少个月？","options":["7.3月","15.0月","17.2月","24.0月"],"answer":"C","explain":"17.2个月是INAVO120最终分析（中位随访34.2个月）的描述性更新，HR 0.42；说明书收录的是主要分析15.0个月。7.3个月是对照组，24.0个月是PFS2。","source":"INAVO120最终分析（NEJM 2025）"},{"id":100,"topic":"HR+","type":"single","stem":"下列关于伊那利塞的描述正确的是？","options":["仅抑制野生型p110α，不能降解突变p110α","对PI3Kα选择性大于300倍，可降解突变p110α蛋白","属于泛PI3K亚型抑制剂","2019年即获得FDA批准上市"],"answer":"B","explain":"伊那利塞对PI3Kα的选择性是β/γ/δ亚型的300倍以上，并能促使突变型p110α经蛋白酶体降解，野生型不受影响。它不是泛PI3K抑制剂，FDA于2024年10月批准。","source":"伊赫莱产品资料（作用机制）"}],"cases":[{"no":1,"title":"让 PIK3CA 检测进路径：认为「检测不改变决策」的循证型客户","profile":"李主任｜三甲医院乳腺内科副主任医师，月门诊 300+，晚期患者多；循证基础好、时间紧，对「新增检测」天然警惕，怀疑厂家推销。","goal":"把讨论从「CDK4/6i 进展后要不要测」前移到「一线治疗前常规测」，用共识和指南说话，落到一个小范围试行。","close":"主目标：下周起组内新发复发转移 HR+/HER2-患者在病理复检时同步送 PIK3CA，试行两周；保底：约病理科和医学部一起做 15 分钟报告解读交流。","points":[{"title":"不认为检测会改变决策","says":"「CDK4/6i 进展了，我换化疗或换内分泌，测不测 PIK3CA 有什么区别？查出来也没好药。」","bullets":["先认同：检测要能改变决策才值得做。","讲变化：伊赫莱 2025 年 3 月获批、2026 年 1 月起执行医保，PIK3CA 突变现在有获批、可报销的靶向方案。","讲时点：最能改变决策的是一线治疗前。INAVO120 入组的就是内分泌耐药、晚期未治的 PIK3CA突变患者，三联 mPFS 17.2 vs 7.3 个月，OS 34.0 vs 27.0 个月（HR 0.67）。","讲共识：2025 版检测共识推荐 HR+/HER2-晚期一线治疗前常规检测（强推荐）。","CDK4/6i 进展后的患者，指南后线选择也按生物标志物分层（PIK3CA、AKT1、PTEN、ESR1、BRCA 等），NGS 一次可回答几个问题；但不在这里推荐伊那利塞。"],"basis":"检测共识 2025（中华病理学杂志 2025;54(02):120-125）；INAVO120；说明书"},{"title":"检测未进路径：贵、等结果","says":"「NGS 不便宜，等两周病人等不起。」","bullets":["时间算清楚：PCR 约 3–5 天，NGS 约 1–2 周；组织不好取用血浆 ctDNA。","确诊复发转移、做穿刺复检时同步开单，检测时间和分期检查、病理复核大部分重叠。","内脏危象等需要立即治疗的，由医生判断先处理。","费用按医院物价，代表不评价；可以讲信息量：NGS 一次多基因，PCR 便宜快但只测常见热点，共识两种都认可。","落地：把 PIK3CA 加进「复发转移 HR+/HER2-」的病理复检开单模板，约定谁开单、报告谁看。"],"basis":"检测共识 2025；讲题中的报告时限"}],"cautions":["案例抓手里「近半数患者有靶向机会」要改说法：有突变不等于都符合适应症，说「约四成多的患者有 PIK3CA 突变」。","「一周左右出报告」改成「PCR 约 3–5 天、NGS 约 1–2 周」。","不解读具体患者的报告，解读交给病理科或医学部。","主任怀疑推销时，不要急着讲产品，先讲共识、指南和科室流程。"],"dialog":[{"who":"rep","stage":"开场","text":"李主任，耽误您 5 分钟。上次您提到 CDK4/6i 进展后的患者选药比较难，我带了 2025 版PIK3CA 检测共识，想听听您对科室送检时点的看法。"},{"who":"doc","stage":"开场","text":"检测？你们厂家都这么说。CDK4/6i 进展了，我换化疗或者换内分泌，查不查 PIK3CA 有什么区别？"},{"who":"rep","stage":"探询","text":"您的顾虑我理解，检测确实要能改变决策才值得做。想请教一下，科室新发复发转移的 HR+/HER2-患者，一线治疗前一般做哪些检测？"},{"who":"doc","stage":"探询","text":"复检 ER、PR、HER2、Ki-67。基因一般不做，进展了家属要求才测。"},{"who":"rep","stage":"探询","text":"那进展后测出 PIK3CA 突变的，后来怎么处理？"},{"who":"doc","stage":"探询","text":"以前也没什么好药，阿培利司国内没有，查了也是存档。"},{"who":"rep","stage":"传递","text":"这正是这两年变化最大的地方。伊赫莱 2025 年 3 月获批，2026 年 1 月起执行医保，PIK3CA 突变现在有获批、可报销的靶向方案了。它的关键研究 INAVO120 入组的是辅助内分泌治疗期间或结束 12 个月内复发、晚期还没接受过系统治疗的突变患者，三联对比哌柏西利加氟维司群，中位 PFS 17.2 个月比 7.3 个月，最终 OS 34.0 个月比 27.0 个月。所以检测最能改变决策的时点，是一线治疗前，而不是进展后。"},{"who":"doc","stage":"传递","text":"那也得等结果，病人等不起。"},{"who":"rep","stage":"异议处理","text":"时间确实要算清楚。共识的流程是组织优先，组织不好取就用血浆。PCR 一般 3 到 5 天，NGS一到两周。如果在确诊复发、做穿刺复检时就同步开单，大部分时间和分期检查、病理复核是重叠的。内脏危象需要马上治疗的，当然由您判断先处理。"},{"who":"doc","stage":"异议处理","text":"费用呢？NGS 不便宜。"},{"who":"rep","stage":"异议处理","text":"收费按医院物价，我不评价。从信息量讲，NGS 一次能同时看PIK3CA、ESR1、AKT1、PTEN、BRCA 这些，后面几线都用得上；PCR 便宜、快，但只覆盖常见热点。共识两种都认可，科室可以按患者情况选。"},{"who":"doc","stage":"异议处理","text":"共识我可以看看。但怎么落地？我们都是各管各的。"},{"who":"rep","stage":"缔结","text":"我想跟您约一个小范围试行：下周起，组里新发复发转移的 HR+/HER2-患者，在病理复检单上同时勾选 PIK3CA，报告回来您组里先看。两周后我把这几例的出报告时间整理给您，看是否耽误治疗。如果您愿意，我再请病理科和我们医学部的同事，用 15 分钟跟组里讲讲报告怎么看。"},{"who":"doc","stage":"缔结","text":"先试两周可以，资料发我。"},{"who":"rep","stage":"缔结","text":"好的，共识原文和 INAVO120 的 NEJM 原文我今天发您，两周后来跟您对数据。谢谢主任。"}],"followups":[{"q":"指南写的是可选，不是必须。","a":"检测本身，2025 版检测共识对 HR+/HER2-晚期一线治疗前常规检测是强推荐；治疗方案的级别各部指南不同（NCCN 一线 1 类、ESMO I,A、CSCO 2025 II 级），说的时候讲清是哪部、哪一版。"},{"q":"你们公司是不是跟检测公司有合作？","a":"检测在哪做、选什么方法由医院和医生决定；我带来的是共识、文献和流程信息。如果涉及公司支持的项目，按公司合规流程和医院规定办，和处方没有关系。"},{"q":"进展后查出来突变，你们的药能用吗？","a":"讲适应症原文；说明 INAVO120 入组的是晚期未治的患者，CDK4/6i 经治后没有 III 期数据，由医生判断，代表不推荐。"}],"fix":{"orig":"「近半数患者有靶向机会」；「一周左右出报告」","fix":"有突变≠都符合适应症，改为「约四成多有 PIK3CA 突变」；出报告改为 PCR 约 3–5 天、NGS 约 1–2 周"}},{"no":2,"title":"检测顾虑：低丰度 ctDNA 报告（PIK3CA 突变丰度 0.3%）","profile":"胡主任｜检测证据导向、处方极审慎；担心低丰度血浆结果可不可靠、能不能报销。","goal":"给主任一个判断低丰度结果的框架（方法、检出下限、组织确认），不替医生拍板；报销问题交给医保办确认。","close":"主目标：协助拿到该检测平台的检出下限和验证资料、协调调取外院蜡块做组织确认；保底：请医学部与主任电话沟通低丰度结果解读。","points":[{"title":"0.3%丰度可信吗","says":"「0.3%太低了，万一是噪音，我给患者上三药，出了问题谁负责？」","bullets":["先看方法：哪个平台、检出下限（LOD）多少；0.3%是否在验证范围内、报告判定的是「检出」还是「低于报告阈值」。","低丰度不等于假阳性：丰度受肿瘤向血液释放 DNA 的多少、样本、克隆性造血等影响；南区 FAQ提到基线丰度和 PI3K 抑制剂疗效没有简单线性关系（摘要口径，引用前核原文）。","INAVO120 里绝大多数患者（301/325）就是用血浆 ctDNA 确认突变入组的。","用不用药由医生结合临床判断；有疑问可请病理科、医学部一起看。"],"basis":"说明书【用法用量】；南区 FAQ F4；INAVO120 检测方法"},{"title":"血浆样本能否报销","says":"「医保会不会只认组织？」","bullets":["说明书：PIK3CA 突变状态需采用经国家药监局批准或经充分验证的检测方法确定，没有限定组织还是血液。","各地医保限定支付和医院审核要求可能不同，代表不下结论，建议科室医保专管员按本地文件确认。"],"basis":"说明书；当地医保文件"},{"title":"要不要补组织","says":"「保险起见，要不要再做组织？」","bullets":["共识思路：组织优先、血浆补充；对低丰度阳性，组织确认是加强证据的办法，不是必需条件。","先查有没有存档蜡块（原发灶也可以，原发灶和转移灶一致性多数研究在九成左右；转移灶更能反映现状）。","组织取不到、病情又需要尽快决定时，由医生结合临床判断，必要时 MDT 讨论。"],"basis":"检测共识 2025；原发/转移一致性研究（Park 2023、Schleifman 2014）"}],"cautions":["不说「0.3%没问题，直接用」，也不说「肯定能报」。","案例里「医保备案材料为 PIK3CA 基因检测报告单、目录未限定组织/血液」——目前收集到的资料里没有医保限定支付原文，引用前核对当地文件。","共识的推荐意见编号在不同幻灯里有互换，讲内容，不讲「推荐意见 4」这种编号。","一致性数字有两套（70.4%–94%和约 55%–60%），对病理科讲时要知道两套都存在。"],"dialog":[{"who":"rep","stage":"开场","text":"胡主任好，上周您说有位患者血液检测查出 PIK3CA 突变、丰度 0.3%，在犹豫。我把资料整理了一下，想跟您过三个问题：结果可不可信、报销、要不要补组织。"},{"who":"doc","stage":"开场","text":"对，0.3%太低了。我不想因为一个可能是噪音的结果给患者上三药，出了问题谁负责？"},{"who":"rep","stage":"探询","text":"您这个审慎非常必要。我先确认几个信息：这份报告是哪家平台、什么方法？报告上写的是「检出」，还是「低于报告阈值」？"},{"who":"doc","stage":"探询","text":"NGS，写的是检出，H1047R，0.3%。"},{"who":"rep","stage":"探询","text":"这个平台的检出下限您看过吗？报告附页一般会写。"},{"who":"doc","stage":"探询","text":"没细看。"},{"who":"rep","stage":"传递","text":"判断低丰度结果，第一步就是看检出下限。如果 0.3%在它验证过的范围内、报告判定检出，就是检测意义上的阳性；丰度低常见于肿瘤向血液释放的 DNA 少，不一定是假阳性。另外，INAVO120 里绝大多数患者就是用血浆 ctDNA 确认突变入组的。不过临床上用不用，还是您结合患者情况来定。"},{"who":"doc","stage":"传递","text":"那报销呢？医保会不会只认组织？"},{"who":"rep","stage":"异议处理","text":"说明书写的是用经国家药监局批准或经充分验证的方法确定 PIK3CA 突变，没有限定组织还是血液。但各地医保限定支付和医院审核要求可能不一样，我不能替医保办下结论，建议科室医保专管员按本地文件确认一下。"},{"who":"doc","stage":"异议处理","text":"那保险起见，要不要再做组织？"},{"who":"rep","stage":"异议处理","text":"共识的思路是组织优先、血浆补充。这位患者如果有存档蜡块，或者转移灶好取，再做一次组织确认是最稳的路径，原发灶和转移灶的一致性多数研究在九成左右。如果组织取不到、病情又需要尽快决定，就由您结合临床判断，必要时 MDT 讨论。"},{"who":"doc","stage":"异议处理","text":"她有手术的蜡块，在外院。"},{"who":"rep","stage":"缔结","text":"那我这边做两件事：第一，请检测机构把这个平台的检出下限和验证资料发给您；第二，如果您决定调外院蜡块，我把院内送检的流程和切片要求整理给护士长。报告解读方面，我也可以请医学部同事跟您电话沟通。这周内给您，可以吗？"},{"who":"doc","stage":"缔结","text":"可以，先把资料给我。"}],"followups":[{"q":"那你说 0.3%到底能不能用？","a":"这个判断只能由您来做。我能提供的是方法学信息（检出下限、验证资料）和组织确认的路径；需要的话请病理科、医学部一起讨论。"},{"q":"组织阴性、血浆阳性，听谁的？","a":"不同样本、不同方法可能不一致（研究报道一致性约 70%–94%），共识没有简单的「谁说了算」，建议结合位点、丰度、方法和临床由 MDT 判断，代表不下结论。"},{"q":"医保拒付了你们负责吗？","a":"不能承诺。建议事先请医保办按本地文件确认需要哪些材料，我可以帮您把要确认的问题列成清单。"}],"fix":{"orig":"「医保备案材料为 PIK3CA 基因检测报告单，目录未限定组织/血液」；「推荐意见 4」","fix":"目前收集到的资料里没有医保限定支付原文，引用前核对当地文件；共识编号在不同资料里有互换，讲内容不讲编号"}},{"no":3,"title":"CDK4/6i 经治、PIK3CA 突变患者（竞品区隔）","profile":"郑主任｜乳腺中心主任，非常谨慎，拒绝一切企业会议，只出席学会年会；诊疗以指南为大方向。已在CDK4/6i 未经治的 PIK3CA 突变患者中用伊那利塞，经治患者用卡匹色替。","goal":"在经治人群上如实承认证据缺口、不争论；把精力放在伊那利塞证据最强的人群（辅助后复发、未用CDK4/6i），巩固主任已有的做法并前移送检。","close":"主目标：留下 NEJM 2025 OS 原文和 CBCS 2026 相关页，两周后回访听意见；保底：主任同意在复发转移确诊时常规送 PIK3CA。","points":[{"title":"经治患者指南推荐卡匹色替","says":"「用过 CDK4/6i 的，指南写的是卡匹色替，我就用卡匹色替。」","bullets":["认同：这符合指南；CDK4/6i 经治人群，伊那利塞目前没有 III 期数据，INAVO120 里既往用过CDK4/6i 的只有 1.2%。","不贬低卡匹色替，不评价主任的选择。","把话题转到另一头：辅助内分泌期间或之后复发、未用过 CDK4/6i 的 PIK3CA 突变患者——这是主任已经在用伊那利塞的人群，巩固它。"],"basis":"INAVO120 基线；CBCS 2026"},{"title":"INAVO120 经治人群占比少","says":"「你们 120 里经治的几乎没有。」","bullets":["如实说 1.2%；讲清适应症原文和研究入组人群的区别。","强调同一个患者一线就用上针对 PIK3CA 的方案，就不需要到 CDK4/6i 进展后再找药——关键在一线前送检。"],"basis":"说明书；INAVO120"},{"title":"INAVO121 结果未公布","says":"「等 121 出来再说。」","bullets":["尊重：III 期结果出来前不提前下结论。","医生主动问 GO39374 时：如实说明是 Ib 期、约 60 例、伊那利塞+氟维司群二联（不是说明书三联用法）、约 97%用过 CDK4/6i、mPFS 约 7 个月；不和 CAPItello-291 比好坏。","主任只参加学会活动：提供已发表文献和指南原文；学术问题可请医学部一对一交流。"],"basis":"GO39374（Ib 期）；INAVO121（在研）"}],"cautions":["案例抓手「GO39374 mPFS 7.1 个月（CAPItello-291 突变人群 5.6 个月）」不要当推广话术：一是跨研究比较，二是二联不是说明书用法。","「INAVO121 结果即将公布」不对外讲时间；案例里「NAVO121」是笔误。","GO39374 的数字资料里有 7.1 和 7.3 两种写法、96.7%和 97%两种写法，引用前以原文献为准。"],"dialog":[{"who":"rep","stage":"开场","text":"郑主任，打扰您三分钟。知道您不参加企业会议，我今天只带了两份已发表的资料：INAVO120最终 OS 的 NEJM 原文，和 CBCS 2026 的相关页。"},{"who":"doc","stage":"开场","text":"放下吧。我说清楚，我按指南来。没用过 CDK4/6i 的 PIK3CA 突变，我用伊那利塞；用过的，指南写卡匹色替，我就用卡匹色替。"},{"who":"rep","stage":"探询","text":"您的思路很清楚，也完全符合指南。想请教一下，您这边这两类患者大概各占多少？"},{"who":"doc","stage":"探询","text":"现在辅助用 CDK4/6i 的越来越多，一线用过进展的也不少。"},{"who":"rep","stage":"探询","text":"明白。关于用过 CDK4/6i 的人群，我先实话实说：伊那利塞在这个人群目前没有 III 期数据，INAVO120 里既往用过 CDK4/6i 的只有 1.2%，您按指南选卡匹色替，我很理解。"},{"who":"doc","stage":"探询","text":"那你们 GO39374 不是有数据吗？上次有人跟我讲 7 个月，比卡匹色替好。"},{"who":"rep","stage":"异议处理","text":"GO39374 是 Ib 期研究，这一组大约 60 例，用的是伊那利塞加氟维司群二联，不是我们说明书批准的三联用法，只能算探索性数据，我不能拿它跟 CAPItello-291 比好坏，跨研究比较本身也要很谨慎。这个人群的 III 期研究 INAVO121 还在进行，正式发表后我第一时间送给您。如果您对研究设计感兴趣，可以请医学部同事跟您做一次一对一的学术交流。"},{"who":"doc","stage":"异议处理","text":"嗯，你这么讲我反而放心一点。"},{"who":"rep","stage":"传递","text":"我今天真正想跟您确认的是另一头：辅助内分泌治疗期间或停药后复发、还没用过 CDK4/6i 的PIK3CA 突变患者。这群人 INAVO120 最终 OS 是 34.0 比 27.0 个月，HR 0.67；CBCS 2026 也把哌柏西利加伊那利塞加氟维司群列进了这一分层。同一个患者一线就用上针对 PIK3CA 的方案，就不用等 CDK4/6i 进展后再找药了。"},{"who":"doc","stage":"传递","text":"这个我同意。问题是很多患者复发的时候没测。"},{"who":"rep","stage":"传递","text":"所以想跟您商量，复发转移确诊时就送 PIK3CA，组织优先、取不到用血浆。这样辅助后复发的突变患者，一线就能按指南分出来。"},{"who":"doc","stage":"缔结","text":"可以。资料留下，我看看。"},{"who":"rep","stage":"缔结","text":"好的。我两周后再来听您的意见；科室新发患者送检如果遇到流程问题，您随时告诉我。"}],"followups":[{"q":"上次有人跟我说你们 7 个月比卡匹色替好。","a":"如果有同事这样讲过，这个说法不准确：GO39374 是 Ib 期二联，跨研究不能比好坏，以 III 期发表的数据为准。"},{"q":"CBCS 也没说经治的用你们。","a":"是的，CBCS 2026 给伊那利塞三联的分层是既往未用 CDK4/6i、辅助内分泌期间或结束后复发的患者；经治分层我们尊重指南。"},{"q":"我不去你们的会，你别约我。","a":"尊重您的原则。以后我只送已发表的文献和学会资料；学术问题需要时，可以请医学部同事一对一交流，您不需要参加任何会议。"}],"fix":{"orig":"「GO39374 mPFS 7.1 个月（CAPItello-291 5.6 个月）」；「INAVO121 结果即将公布」","fix":"跨研究比较+二联非说明书用法，不作推广话术；在研研究不预告时间；「NAVO121」为笔误"}},{"no":4,"title":"血糖恐惧+经治循证：把高血糖讲成「可预防、可监测、可处理」","profile":"陈主任｜三甲综合医院肿瘤内科主任，按循证选方案，怕不良反应给科室带来麻烦；曾有患者因血糖问题进 ICU；CDK4/6i 经治后首选卡匹色替和 T-DXd。","goal":"先共情、了解那次事件的细节，再用说明书和 2026 共识给出一套管理办法；经治人群如实说证据缺口，重点放在一线。","close":"主目标：约内分泌科做一次 15 分钟血糖管理科室会，定下会诊通道和出院清单；保底：下一例符合一线条件的患者启动前，和主任一起过一遍基线评估清单。","points":[{"title":"恐惧高血糖","says":"「之前有患者因为血糖进了 ICU，PI3K 这类药我很谨慎。」","bullets":["先共情，了解细节：基线 HbA1c 查没查、头几周怎么监测、有没有糖尿病、什么时候发现的——不为事件辩解。","说明书新版已加强提示：曾报告重度高血糖包括危及生命的酮症酸中毒；空腹血糖优化前不应给药；治疗前测 FPG 和 HbA1c。坦诚反而建立信任。","发生早：中位 7 天；监测：第 1 周每 3 天测一次，之后每周→每 2 周→每 4 周，HbA1c 每 3 个月。","可逆、停药少：FPG>8.9 的患者 96%至少改善 1 级（中位 8 天）；因高血糖停药 1.2%（说明书）。","处理：二甲双胍一线；2026 高血糖共识常规不推荐磺脲类、格列奈类，胰岛素是最后选择；按FPG 分级暂停或减量。","急诊信号（2026 共识）：FPG≥16.7 或随机血糖≥22.2 mmol/L，或口干多尿多饮→立即就诊、测血酮；建立内分泌科会诊通道。"],"basis":"说明书新版；《乳腺癌 PI3K/AKT 抑制剂治疗相关高血糖规范化管理中国专家共识（2026 年版）》中国癌症杂志2026,36(4):412-424"},{"title":"高血糖会不会影响疗效","says":"「有了高血糖，疗效会不会打折？」","bullets":["INAVO120 事后分析：发生高血糖者 mPFS 21.0 个月，未发生者 12.8 个月，都高于对照组 7.3 个月。","只能说「无论是否发生高血糖都能获益，规范管理让患者持续用药」，不能说「高血糖说明有效」。"],"basis":"ESMO BC 2026（事后分析）"},{"title":"缺 CDK4/6 经治人群循证","says":"「伊那利塞没有 CDK4/6 经治数据，三联副作用还大。」","bullets":["如实承认：经治人群没有 III 期数据；尊重主任选卡匹色替或 ADC。","证据最强的是一线：辅助内分泌期间或之后复发、未用 CDK4/6i 的 PIK3CA 突变患者。","GO39374 不拿来推荐（Ib 期、二联、非说明书用法）。"],"basis":"INAVO120；说明书"}],"cautions":["案例抓手「GO39374…mPFS 7.1m，优于 CAPItello 的 5.6m」不能讲：跨研究比较不说「优于」，二联也不是说明书用法。","「血糖高是中靶效应，影响疗效」「从不良反应转为疗效正反馈」要改成事后分析的标准说法，否则评委会认为越界。","不说「伊那利塞的高血糖比卡匹色替少」——全球数据里伊那利塞的高血糖更多。","案例中「卡皮色替」是笔误，应为卡匹色替。"],"dialog":[{"who":"rep","stage":"开场","text":"陈主任，上次您提到之前有位患者因为血糖进了 ICU，这件事我一直记着。今天想专门跟您聊血糖管理，不谈别的。"},{"who":"doc","stage":"开场","text":"那次真的吓到了，家属闹，科室写了半天材料。PI3K 这类药我现在很谨慎，用过 CDK4/6i 的我宁可上卡匹色替或者 8201。"},{"who":"rep","stage":"探询","text":"完全理解，换我也会谨慎。方便问一下当时的情况吗？用药前查过 HbA1c 吗？头几周血糖怎么监测的？"},{"who":"doc","stage":"探询","text":"基线血糖不高，HbA1c 没查。出院回家，一个多月后才复查，回来就酮症了。"},{"who":"rep","stage":"传递","text":"谢谢您告诉我这些，这正是这类药管理的关键：时间窗口很早。伊那利塞的高血糖中位 7 天就出现，说明书要求第一周每 3 天测一次空腹血糖，之后每周一次，第 2 到 3 个月每两周一次，HbA1c 每 3 个月。说明书新版还专门加了酮症酸中毒的提示，要求空腹血糖优化之前不给药、治疗前测 HbA1c。"},{"who":"doc","stage":"传递","text":"说明书都写了，可患者回家不测怎么办？"},{"who":"rep","stage":"异议处理","text":"所以做得好的医院，都把出院带回去的东西做成清单：血糖仪和记录表、什么数值要停药、什么症状要马上回来。比如共识里的急诊信号：空腹血糖≥16.7 或随机≥22.2，或者口干多尿多饮，要立刻来测血酮。数据上，空腹血糖超过 8.9 的患者 96%能至少改善一级，中位 8 天；因高血糖停药的是 1.2%。处理首选二甲双胍，2026 共识也写了磺脲类、格列奈类常规不推荐，胰岛素放最后。"},{"who":"doc","stage":"异议处理","text":"胰岛素为什么放最后？"},{"who":"rep","stage":"异议处理","text":"共识的解释是这类高血糖伴高胰岛素血症，外源胰岛素可能重新激活通路，也增加低血糖风险。真需要的时候，按共识请内分泌科来管。"},{"who":"doc","stage":"异议处理","text":"有了高血糖，疗效会不会打折？"},{"who":"rep","stage":"异议处理","text":"INAVO120 有个事后分析，发生高血糖和没发生的患者，中位 PFS 分别是 21.0 和 12.8 个月，都比对照组的 7.3 个月长。因为是事后分析，只能说明无论是否出现高血糖都能获益，规范管理能让患者持续用药。"},{"who":"doc","stage":"异议处理","text":"那用过 CDK4/6i 的呢？"},{"who":"rep","stage":"异议处理","text":"这部分我如实说，伊那利塞目前没有 III 期数据，您按指南选卡匹色替或者 ADC，我尊重。伊那利塞证据最充分的是一线：辅助内分泌期间或停药后复发、晚期没用过 CDK4/6i 的 PIK3CA 突变患者。"},{"who":"rep","stage":"缔结","text":"主任，我想请内分泌科的主任来科室做一次 15 分钟的血糖管理交流，把会诊通道和出院清单定下来。下一例符合一线条件的患者启动前，我们一起把基线评估清单过一遍。下周三中午可以吗？"},{"who":"doc","stage":"缔结","text":"先把内分泌科这个会开了再说。"},{"who":"rep","stage":"缔结","text":"好的，我先去约内分泌科，定了时间马上告诉您。"}],"followups":[{"q":"家属闹起来，说明书写了有什么用？","a":"说明书是底线，落地靠患者教育和随访：出院清单、血糖记录表、急诊信号卡、首周电话随访；可以和护士一起做一份患者教育模板。"},{"q":"你保证不会再进 ICU？","a":"不能保证，任何药物都有风险。能做的是把风险提前识别：基线评估、首周密切监测、写清停药和就诊指征、打通内分泌会诊通道。"},{"q":"卡匹色替血糖少多了。","a":"是的，伊那利塞的高血糖发生率更高，这点不回避。两个药的不良反应谱不同，各有需要重点管理的地方；选哪个，由您按适用人群和患者情况定。"}],"fix":{"orig":"「GO39374…mPFS 7.1m，优于 CAPItello 的5.6m」；「血糖高是中靶效应，影响疗效」","fix":"不说「优于」；高血糖亚组是事后分析，只说「无论是否发生高血糖都获益」；「卡皮色替」应为卡匹色替"}},{"no":5,"title":"诊断路径断裂：报告出来了，临床没读，谁开单也不清楚","profile":"邹主任｜乳腺科主任，病理诊断经验丰富、熟悉传统分型，对 PCR 和 NGS 差异了解有限，认为分子检测是「可选项目」。","goal":"把「推检测」变成「共建路径」：把检测拆成开单、送检、解读、决策四个动作，每个动作定人定时限，促成病理科和临床一起开会。","close":"主目标：主任牵头约病理科开 30 分钟路径会，选一个病区试行一个月；保底：主任同意把 PIK3CA 加进复发转移的病理复检套餐。","points":[{"title":"报告出来临床没读","says":"「报告在病理系统里，临床不一定去点开。」","bullets":["增加「报告回传」环节：阳性结果推送给主管医生，下次门诊或查房前确认，决策写进病历。"],"basis":"检测共识 2025（院内路径）"},{"title":"PCR 和 NGS 分不清","says":"「年轻医生对 PCR、NGS 报告都分不清。」","bullets":["PCR：快（约 3–5 天）、便宜，只测已知热点（如 therascreen 11 个位点），研究报道约两成已知突变可能漏检，双突变漏检更多。","NGS：覆盖广（INAVO120 覆盖 62 个位点），可同时测 ESR1、AKT1、PTEN 等，周期约 1–2周，需要专业解读。","共识：NGS 或 PCR 均可，按患者情况和机构条件选；组织 PCR 阴性而有治疗需求者建议 NGS 复检；ctDNA 阴性评估组织。"],"basis":"检测共识 2025；Martínez-Sáez 2020"},{"title":"院内 SOP 缺失","says":"「谁开单、谁送检，说不清。」","bullets":["开单：复发转移确诊时（一线治疗前）由主管医生开，放进病理复检标准套餐。","送检：组织优先（转移灶优于原发灶），组织不可及时血浆 ctDNA。","解读：病理报告写清突变位点、丰度、意义，推送临床。","决策：定期分子 MDT。SOP 由医院自行制定，代表只提供参考框架。"],"basis":"检测共识 2025"},{"title":"病理与临床各管一段","says":"「病理科那边未必愿意多做事。」","bullets":["对病理科也有价值：PIK3CA 纳入 NCCL 室间质评计划；三级公立医院绩效监测手册有分子病理检测相关指标（引用前核对原文）。","建议双周一次 15 分钟分子 MDT，把阳性患者过一遍。"],"basis":"NCCL 2025 质评计划；国家三级公立医院绩效监测操作手册（2025 版）"}],"cautions":["「首次靶向治疗前分子病理检测率纳入乳腺癌」来自讲题图片读数，讲之前核对手册原文。","代表不替病理科定检测方法，不承诺检测费用。","案例背景里「PIK3CA 是 PAM 信号通路的第一个基因（1988–2025）」是讲题口径，对病理科讲机制时说「PI3K 位于 PAM 通路上游」更稳。"],"dialog":[{"who":"rep","stage":"开场","text":"邹主任，上次您说科室 PIK3CA 其实送了不少，但报告出来经常没人看。我带了一张从分型到基因的检测路径图，想跟您一起看看卡在哪一步。"},{"who":"doc","stage":"开场","text":"是啊，送了，报告在病理系统里，临床不一定去点开，也说不清是谁开的单。"},{"who":"rep","stage":"探询","text":"我想按四个动作问一下：一般谁开单？什么时间点？送组织还是血？报告出来谁负责看？"},{"who":"doc","stage":"探询","text":"门诊、病房都有人开，时间不固定，复发时、进展后都有。报告谁看……主管医生吧。"},{"who":"rep","stage":"探询","text":"您觉得断得最厉害的是哪一步？"},{"who":"doc","stage":"探询","text":"解读和决策。年轻医生对 PCR 和 NGS 报告也分不清。"},{"who":"rep","stage":"传递","text":"这正好是共识写得比较清楚的部分。时间点：HR+/HER2-晚期一线治疗前常规检测。样本：组织优先，转移灶优于原发灶，取不到用血浆。方法：NGS 或 PCR 都可以。PCR 快，3 到 5 天，便宜，但只测常见热点，研究报道约两成已知突变可能漏掉；NGS 覆盖面广，INAVO120 覆盖了 62 个位点，还能同时看 ESR1、AKT1，周期一到两周，需要专业解读。组织 PCR 阴性、又有治疗需求的，共识建议再做 NGS。"},{"who":"doc","stage":"传递","text":"道理我懂，关键是流程。"},{"who":"rep","stage":"异议处理","text":"所以想跟您商量，四个动作各定一个人：开单，复发转移确诊时由主管医生开，放进病理复检的标准套餐；送检，护士按组织优先准备；解读，病理科在报告上写清阳性和意义，推送给主管医生；决策，每两周一次 15 分钟的分子 MDT。"},{"who":"doc","stage":"异议处理","text":"病理科那边未必愿意多做事。"},{"who":"rep","stage":"异议处理","text":"对病理科也有好处：PIK3CA 在 NCCL 的室间质评计划里，三级公立医院绩效监测手册也有分子病理检测相关的指标。我把文件原文整理给您，您跟病理科谈的时候用得上。"},{"who":"rep","stage":"缔结","text":"我这有一份 SOP 的空白参考框架，内容由科室和病理科自己定。能不能请您牵头，约病理科主任开个 30 分钟的小会，先在一个病区试行一个月？一个月后我把送检数量、出报告时间、报告到决策的时间整理给您看。"},{"who":"doc","stage":"缔结","text":"可以，我来约病理科。"}],"followups":[{"q":"病理科有自己的流程，你别插手。","a":"完全尊重。SOP 由医院自己定，我只提供公开的共识和参考框架；您需要的话，我可以帮忙统计送检和出报告的时间数据。"},{"q":"PCR 便宜，阴性了再做 NGS 不是折腾患者吗？","a":"共识允许按条件选方法；首次就选 NGS 可以一次覆盖更多位点、少一次取材；PCR 阴性而有治疗需求的再做 NGS；组织不够用血浆补充；确诊转移时就送检，与一线治疗规划并行。"},{"q":"你说的国考指标在哪一页？","a":"如实说：我回去核对手册原文，把文件名和页码发给您；核实之前不引用。"}],"fix":{"orig":"「首次靶向治疗前分子病理检测率」等国考指标","fix":"来自讲题图片读数，讲之前核对手册原文"}},{"no":6,"title":"检测做了，方案没改：报告只存档，精准治疗没落地","profile":"符主任｜三甲医院乳腺科带组医生，实战导向，希望患者尽早启动治疗；认可检测价值但执行有落差；未用过达尔西利的患者习惯先上达尔西利+氟维司群，同步送检，报告回来是突变也不调整。","goal":"不评价现有处方；把「等不等报告」算清楚，用分层办法让能等的患者等报告再定一线方案，落到组内试行。","close":"主目标：主任组内试行一个月「无内脏危象的新患者等报告再定一线方案」；保底：同意穿刺时同步开PIK3CA 检测。","points":[{"title":"等待周期长，先给药后等报告","says":"「报告要 10 到 20 天，患者不能干等。」","bullets":["把时间拆开：10–20 天多半是穿刺、病理、再送基因串联起来的；穿刺时同步开单，PCR 约 3–5天、NGS 约 1–2 周。","分层（由医生判断）：无内脏危象、症状可控的，等报告再定一线方案；需要马上治疗的，先处理。","关键认知：INAVO120 入组的是晚期未接受过系统治疗的患者；一线先启动了二联，患者就不在这个研究人群里，相当于错过了有 III 期证据的一线三联时点。"],"basis":"INAVO120 入组标准；检测共识 2025"},{"title":"阳性后未做三药再评估","says":"「已经在用达尔西利的，报告回来是突变，你让我换？」","bullets":["已经在治疗、病情稳定的患者要不要调整，是医生的判断，目前没有中途换方案的研究数据，代表不建议具体患者换药。","重点放在下一位新患者：报告回来再定方案。","数据：PIK3CA 突变、内分泌耐药患者，INAVO120 对照组哌柏西利+氟维司群 mPFS 7.3 个月，三联 17.2 个月；OS 34.0 vs 27.0 个月，死亡风险降低 33%。"],"basis":"INAVO120；说明书"},{"title":"缺报告回传后的再评估流程","says":"「科室不只我一个人看病。」","bullets":["做一页「复发转移 HR+/HER2-一线前送检分层」参考流程，主任修改后在组内试行。","报告回传→下次门诊前确认→决策记录。"],"basis":""}],"cautions":["不批评达尔西利或现有处方，它是指南推荐的一线 CDK4/6i。","注意 INAVO120 三联里用的是哌柏西利，不要说成达尔西利。","不说「患者因为没换药吃亏了」这类话。","「PIK3CA 突变是内分泌耐药上游源头驱动、突变患者预后更差」可以讲，但别夸大成「突变患者都会快速进展」。"],"dialog":[{"who":"rep","stage":"开场","text":"符主任，上次您说 PIK3CA 报告要等 10 到 20 天，怕耽误患者，所以先上达尔西利加氟维司群。我把出报告的时间问了一下，想跟您对一对。"},{"who":"doc","stage":"开场","text":"对，患者来了就要开始治疗，不能让人干等两三个星期。"},{"who":"rep","stage":"探询","text":"理解。您说的 10 到 20 天，是从什么时候开始算的？"},{"who":"doc","stage":"探询","text":"第一次门诊看完片子，排穿刺，穿完送病理，再送基因，前前后后半个多月。"},{"who":"rep","stage":"探询","text":"如果穿刺的时候就同时开基因检测呢？"},{"who":"doc","stage":"探询","text":"那会快一些。"},{"who":"rep","stage":"传递","text":"共识的流程是组织取得到用组织，取不到用血浆。PCR 一般 3 到 5 天，NGS 一到两周，穿刺时同步送，很多时候病理复检出来，基因结果也差不多到了。还有一点想跟您分享：INAVO120入组的是晚期还没接受过系统治疗的患者。一旦先开始二联，这个患者就不在这个研究人群里了。PIK3CA 突变、内分泌耐药的患者，研究对照组哌柏西利加氟维司群中位 PFS 是 7.3 个月，三联是 17.2 个月，最终 OS 34.0 比 27.0 个月，死亡风险降低 33%。"},{"who":"doc","stage":"传递","text":"那已经在用达尔西利的，报告回来是突变，你是让我换？"},{"who":"rep","stage":"异议处理","text":"已经在治疗、病情稳定的患者要不要调整，是您的临床判断，目前也没有中途换方案的研究数据，我不会建议具体哪位患者换药。我想跟您商量的是下一位新患者。"},{"who":"doc","stage":"异议处理","text":"内脏转移、症状重的呢？也等？"},{"who":"rep","stage":"异议处理","text":"需要马上治疗的，当然由您判断先处理。我想做的是一个简单分层：没有内脏危象、症状可控的，等一到两周拿到报告再定一线方案；需要马上治疗的，按您的经验先处理。这样不耽误急的，也不错过能等的。"},{"who":"doc","stage":"异议处理","text":"这个可以考虑。但组里不只我一个人看病。"},{"who":"rep","stage":"缔结","text":"那我做一页「复发转移 HR+/HER2-一线前送检分层」的参考流程，您改好后先在组里试一个月。一个月后我把这几例从送检到出报告的天数整理给您，看看到底耽不耽误。"},{"who":"doc","stage":"缔结","text":"行，先在我组里试。"}],"followups":[{"q":"内脏转移、症状重的也让我等？","a":"不等。内脏危象等需要立即治疗的，由医生判断先处理；分层只针对没有内脏危象、症状可控的患者。"},{"q":"检测公司说的 3 到 5 天从来没做到过。","a":"那就用科室自己的数据：试行一个月，记录每例从开单到出报告的天数，卡在哪个环节（送检时间、物流、批次）就改哪个环节。"},{"q":"我用达尔西利效果也挺好。","a":"认同，达尔西利是指南推荐的一线方案，PIK3CA 野生型的患者照原方案。我们讨论的只是检测到突变、内分泌耐药的那部分患者，怎么在一线就做选择。"}],"fix":{"orig":"","fix":"注意 INAVO120 三联用的是哌柏西利；不批评达尔西利方案"}},{"no":7,"title":"皮下开关：不比药价，比总账（赫双妥）","profile":"赵主任｜三甲综合医院乳腺外科主任，外科思维，看重手术量与床位周转；不排斥新剂型，但对药费、科室收入、护理流程变化敏感，「要看到账」。科室 HER2+早期患者每 3 周住院 1–2 天静脉输注。","goal":"把讨论从「药价」转到「总账」：床位、医疗总费用、时间；疗效讲「相当」；落到用本院数据做一页测算和门诊观察区可行性评估。","close":"主目标：一周内用本院公开数据做一页测算，并约护士长、医务科评估门诊观察区；保底：先选 1–2 例新患者试行门诊皮下。","points":[{"title":"集采后静脉便宜，皮下推高次均费用","says":"「静脉集采以后便宜，皮下一上，次均费用就上去了。」","bullets":["不只比药价，算总账：非药品费用住院约 3,200 元/次 vs 门诊约 150 元/次；孙逸仙纪念医院单中心测算，整个疗程整体医疗费用仍净省约 4.5 万元/患者。","单中心数据要注明出处，并提出用本院数据重算。","医保：赫双妥三个适应症 2025 年 1 月 1 日起执行国家医保；具体价格以当地挂网为准，不预测集采后价格。"],"basis":"广州孙逸仙纪念医院真实世界研究（皮下开关参考资料）；医保目录"},{"title":"转门诊后住院人次和科室收入下降","says":"「住院人次下来了，科室指标不是难看了？」","bullets":["不谈科室收入，转成床位资源：静脉方案平均单次住院 1.79 天，18 周期占 32.22 个床日，释放后约可多收 3–4 名三四级手术患者（单中心）。","运营角度：床位给更需要手术的患者，手术结构更好；门诊治疗符合国考运营效率、日间医疗的方向（具体指标核对手册原文）。"],"basis":"孙逸仙纪念医院 RWS；国家三级公立医院绩效考核操作手册"},{"title":"没有日间病房，护理和收费怎么落地","says":"「我们没有日间病房，护士也忙。」","bullets":["不一定需要日间病房：负荷剂量大腿皮下约 8 分钟、观察 30 分钟；维持剂量约 5 分钟、观察 15 分钟；不用建静脉通路、不用按体重配药；门诊治疗室加观察区即可。","门诊收费和医保报销路径需医务科、医保办确认，代表帮忙把问题列清楚。","疗效安全：FeDeriCa 帕妥珠单抗 Ctrough 非劣效，tpCR 59.7% vs 59.5%，安全性总体相当；PHranceSCa 85%患者偏好皮下。","可引用《抗肿瘤药物创新皮下制剂临床应用的药事服务专家共识》。"],"basis":"赫双妥说明书；FeDeriCa；PHranceSCa"}],"cautions":["疗效说「相当」「一致」，不说「更优」。","负荷剂量观察 30 分钟、维持剂量观察 15 分钟，别说反；蒽环类全部完成后才给赫双妥，不同天给；两次给药间隔≥6 周要重新给负荷剂量。","不谈科室创收、个人收益（评委重点看这一条）。","静脉集采的时间是内部信息，不对外讲。"],"dialog":[{"who":"rep","stage":"开场","text":"赵主任，上次您说科室床位紧，今天想用几分钟跟您算一笔床位的账，跟药价无关。"},{"who":"doc","stage":"开场","text":"你们皮下的我知道，好是好，可静脉集采以后便宜，皮下一上，次均费用就上去了，药剂科也会问。"},{"who":"rep","stage":"探询","text":"明白，药剂科的问题我们一起准备。想先问一下，科室 HER2 阳性早期患者现在每 3 周住一次院打静脉，平均住几天？"},{"who":"doc","stage":"探询","text":"一天半到两天吧。"},{"who":"rep","stage":"探询","text":"一个疗程 18 周期，每位患者要占 30 多个床日。床位现在紧到什么程度？"},{"who":"doc","stage":"探询","text":"手术排不上，周转压力很大。"},{"who":"rep","stage":"传递","text":"广州孙逸仙纪念医院做过一个真实世界研究：静脉方案平均单次住院 1.79 天，18 周期占 32.22个床日，转门诊皮下后这部分全部释放，按他们测算可以多收 3 到 4 名三四级手术患者。费用上，非药品费用住院一次约 3,200 元，门诊约 150 元，他们测算整个疗程的整体医疗费用仍能净省约 4.5 万元。这是单中心数据，我想用咱们医院自己的数字重新算一份给您。"},{"who":"doc","stage":"传递","text":"住院人次下来了，科室指标不是难看了？"},{"who":"rep","stage":"异议处理","text":"从运营角度看，床位腾给更需要手术的患者，手术量和难度结构反而更好；门诊治疗也符合国考运营效率和日间医疗的方向，具体指标我把手册原文找给您核对。"},{"who":"doc","stage":"异议处理","text":"我们没有日间病房，护士也忙。"},{"who":"rep","stage":"异议处理","text":"赫双妥不一定要日间病房：负荷剂量大腿皮下约 8 分钟，观察 30 分钟；维持剂量约 5 分钟，观察 15 分钟；不用建静脉通路，也不用按体重配药，门诊治疗室加一个观察区就能做。门诊收费和医保怎么走，需要医务科、医保办确认，我先帮您把问题列出来。"},{"who":"doc","stage":"异议处理","text":"疗效呢？皮下跟静脉一样吗？"},{"who":"rep","stage":"异议处理","text":"FeDeriCa 研究里，皮下的帕妥珠单抗谷浓度达到非劣效，总病理完全缓解率 59.7%和 59.5%，安全性总体相当。所以我们说疗效相当，好处在时间和床位；PHranceSCa 研究里 85%的患者更愿意选皮下。"},{"who":"rep","stage":"缔结","text":"我想做两件事：第一，用咱们医院的公开数据做一页测算，下周给您；第二，约护士长和医务科一起看看门诊观察区能不能落地。可行的话，先选一两位新患者试行，您看可以吗？"},{"who":"doc","stage":"缔结","text":"先把账算出来再说。"},{"who":"rep","stage":"缔结","text":"好的，下周三前给您。"}],"followups":[{"q":"药剂科只看药品费用。","a":"一起准备：把非药品费用和床日一并列入测算，可以引用《抗肿瘤药物创新皮下制剂临床应用的药事服务专家共识》，请药剂科一起看总账。"},{"q":"皮下注射部位反应多不多？","a":"注射部位反应多为 1–2 级（FeDeriCa 约 12.9%），表现以疼痛、红斑、肿胀为主；左右大腿交替注射，距上次注射点至少 2.5 cm。"},{"q":"门诊打完出事了谁管？","a":"按说明书观察时间在观察区观察（负荷剂量 30 分钟、维持剂量 15 分钟），观察结束后再给化疗；门诊配好超敏反应的处置流程和药品，按医院门诊治疗管理规定执行。"}],"fix":{"orig":"孙逸仙纪念医院测算数据","fix":"单中心数据要注明出处，并用本院数据重算；不谈科室收入"}},{"no":8,"title":"一线三联的三项顾虑：核心是 CDK4/6 经治人群的证据缺口","profile":"陈主任｜茂名市人民医院乳腺外科副主任医师/组长，手术与全程管理并重，看重证据等级和指南定位；已了解 CBCS 指南表述和 INAVO120 的 PFS、OS；在治 2 例患者用卡匹色替。","goal":"认同主任的证据等级标准，如实界定伊那利塞的适用人群；把「证据缺口」转成「适用人群界定」，推动辅助内分泌后复发、一线 PIK3CA 突变的患者优先考虑三联。","close":"主目标：下一例辅助内分泌后复发、未用 CDK4/6i 的 PIK3CA 突变患者，主任优先考虑三联；保底：留下 NEJM 原文，两周后回访；需要时安排医学部学术交流。","points":[{"title":"三联重复用药：辅助阶段已用过 CDK4/6i","says":"「辅助用过 CDK4/6 的，你三联里又有 CDK4/6，这不是重复吗？」","bullets":["如实：INAVO120 既往用过 CDK4/6i 的只有 1.2%，辅助 CDK4/6i 后复发患者用三联的证据有限，由医生判断，代表不主动推荐。","界定人群：辅助内分泌治疗（未用 CDK4/6i）期间或结束后复发、晚期未治、PIK3CA 突变——证据最强（CBCS 2026、NCCN 一线 1 类、ESMO I,A）。","对未用过 CDK4/6i 的患者，三联不是重复用药：设计依据是 ER、CDK4/6、PI3K 三条通路相互串扰共同导致耐药。"],"basis":"INAVO120 基线；CBCS 2026；作用机制"},{"title":"缺 CDK4/6 经治数据，与卡匹色替无头对头","says":"「跟卡匹色替也没有头对头。」","bullets":["认同：没有头对头研究，两药研究人群不同，不做优劣结论。","请教主任用卡匹色替的体会，不贬低。"],"basis":"CAPItello-291；INAVO120"},{"title":"不认可间接对比和 Ib 期小样本","says":"「你们拿 Ib 期小样本和别人比，我不认。」","bullets":["完全赞同——这就是证据等级意识。GO39374 是 Ib 期、约 60 例、二联，只是探索性数据。","把重点放在 III 期 INAVO120：mPFS 17.2 vs 7.3 个月；OS 34.0 vs 27.0 个月，HR 0.67；至首次后续化疗 35.6 vs 12.6 个月。"],"basis":"INAVO120（NEJM 2024、NEJM 2025）"}],"cautions":["别把证据缺口硬说成「有证据」，评委会重点看这一条。","「伊那利塞最优势阶段在晚期一线」可以讲，但要说清是哪类一线患者。","最终分析的 mPFS 17.2 个月是描述性更新，说明书收录的是 15.0 个月；评委问到要能说清两者区别。"],"dialog":[{"who":"rep","stage":"开场","text":"陈主任，上次您提了三个问题，我回去查了资料，今天一个一个跟您说，不确定的地方我也直接告诉您。"},{"who":"doc","stage":"开场","text":"好。第一，辅助用过 CDK4/6 的，三联里又有 CDK4/6，不是重复吗？第二，CDK4/6 经治没数据，跟卡匹色替也没头对头。第三，拿 Ib 期小样本跟别人比，我不认。"},{"who":"rep","stage":"异议处理","text":"我先说第三点，我完全同意您。GO39374 是 Ib 期，大约 60 例，用的还是二联，只能算探索性数据，不能拿来跟其他研究比，也不能作为推荐依据。第二点，伊那利塞和卡匹色替确实没有头对头研究，两个研究的人群也不一样，我不做谁好谁坏的结论。"},{"who":"doc","stage":"异议处理","text":"那第一点呢？"},{"who":"rep","stage":"异议处理","text":"第一点也如实说：INAVO120 里既往用过 CDK4/6i 的只有 1.2%，辅助用过 CDK4/6i 后复发的患者用三联，目前证据有限，这类患者由您判断，我不会主动推荐。"},{"who":"rep","stage":"探询","text":"想请教一下，您那两位用卡匹色替的患者，用下来体会怎么样？"},{"who":"doc","stage":"探询","text":"用了三四个月，一个腹泻比较重，调了剂量。"},{"who":"rep","stage":"探询","text":"谢谢您分享。那您科室里，辅助内分泌治疗期间或停药后复发、但辅助没用过 CDK4/6i 的患者多吗？"},{"who":"doc","stage":"探询","text":"还是不少的，辅助用 CDK4/6 的主要是高危的。"},{"who":"rep","stage":"传递","text":"这群人恰好是 INAVO120 的人群，也是伊那利塞证据最强的地方。III 期结果是：中位 PFS 17.2比 7.3 个月，最终 OS 34.0 比 27.0 个月，HR 0.67，到第一次用化疗的时间 35.6 比 12.6 个月。对这类没用过 CDK4/6i 的患者，三联不是重复用药，它的设计依据是 ER、CDK4/6、PI3K 三条通路相互串扰、共同导致耐药。CBCS 2026 也把这个三联列进了这一分层。"},{"who":"doc","stage":"传递","text":"17.2 个月是更新的数据，说明书上是 15 个月吧？"},{"who":"rep","stage":"传递","text":"是的，说明书收录的是主要分析 15.0 比 7.3 个月，HR 0.43；17.2 个月是最终分析的描述性更新。OS 34.0 比 27.0 个月已经写进了新版说明书。"},{"who":"rep","stage":"缔结","text":"所以我想请您考虑：下一位辅助内分泌后复发、没用过 CDK4/6i、检测到 PIK3CA 突变的一线患者，优先考虑三联。NEJM 的两篇原文我留给您，两周后我再来听您的意见。"},{"who":"doc","stage":"缔结","text":"这个人群我可以考虑。"}],"followups":[{"q":"茂名这边能检测的地方不多。","a":"先了解院内能做的方法（PCR 或 NGS）；组织取不到可以用血浆 ctDNA；外送按医院规定。我可以把院内现有的检测路径整理成一张表。"},{"q":"卡匹色替我用着挺好。","a":"尊重。卡匹色替按其说明书和指南有它的适用人群；我们讨论的是辅助内分泌后复发、未用CDK4/6i 的 PIK3CA 突变一线患者，这类人群有 INAVO120 的 III 期 OS 数据。"},{"q":"三联毒性叠加，老年患者受得了吗？","a":"说明书写明≥65 岁不需要调整起始剂量，但剂量调整或暂停的发生率更高（79.2% vs 68.1%），需要更密切地监测，由医生评估。"}],"fix":{"orig":"","fix":"17.2 个月是最终分析描述性更新，说明书收录 15.0 个月，被问要能说清"}},{"no":9,"title":"路径依赖 T-DXd：后线选药按经验排兵，PIK3CA 不常规送检","profile":"吴主任｜三甲综合医院乳腺中心主任医师/病区组长，临床经验丰富，看重既往疗效口碑，偏好现成方案；内分泌+CDK4/6i 进展后倾向直接用 T-DXd；HER2 多为低表达/阴性，PIK3CA 不常规送检。","goal":"不否定 ADC，用「分层」代替「对立」：后线按生物标志物核对选择，更重要的是把检测前移到一线治疗前，让 PIK3CA 突变患者一线就用上有 III 期证据的方案。","close":"主目标：组内新发 HR+/HER2-晚期患者一线治疗前送 PIK3CA，试行一个月；保底：约一次 15 分钟科室会讲生物标志物分层和安全性管理清单。","points":[{"title":"路径依赖，认为 ADC 后线更稳妥","says":"「CDK4/6i 进展了我就上 8201，效果大家都知道。」","bullets":["尊重 ADC 的价值和主任的经验，不比好坏。","CBCS 治疗原则：即使有内脏转移，内分泌联合靶向仍是优选；内分泌获益者尽量用到进展。","INAVO120 里三联组至首次后续化疗 35.6 vs 12.6 个月（HR 0.43）——一线用对方案，可以推迟化疗。","T-DXd 的适用条件以其说明书为准，代表不评价竞品。"],"basis":"CBCS 治疗原则；INAVO120"},{"title":"生物标志物分层意识不足","says":"「基因检测平时不怎么做。」","bullets":["内分泌+CDK4/6i 进展后，指南后线选择按 PIK3CA、AKT1、PTEN、ESR1、BRCA 等分层；NGS一次覆盖。","一线治疗前送检，PIK3CA 突变、内分泌耐药的患者一线就可以考虑三联。"],"basis":"检测共识 2025；CBCS 2026"},{"title":"对 PI3Kα 抑制剂经治证据与安全性存疑","says":"「PI3K 抑制剂后线没什么数据，副作用还多。」","bullets":["如实：CDK4/6i 经治后伊那利塞没有 III 期数据，证据最强在一线。","安全性给管理清单：高血糖（基线评估、首周每 3 天测、二甲双胍一线）、口腔炎（出现症状即用不含酒精的皮质类固醇漱口水）、腹泻（首次出现即止泻补液）；因 AE 停用伊那利塞 6%（说明书）。"],"basis":"说明书；2026 PAM 通路不良反应共识"}],"cautions":["用「分层」不用「否定 ADC」；不引用和 DB-04、DB-06 的比较数据。","不推荐伊那利塞用于 CDK4/6i 经治后的患者。","「有靶先打靶」是内部口号，对医生讲指南原则的原文。"],"dialog":[{"who":"rep","stage":"开场","text":"吴主任，今天不打扰您太久。想跟您聊聊 HR+/HER2-晚期患者一线治疗前的检测，不谈后线换药。"},{"who":"doc","stage":"开场","text":"一线前测什么？CDK4/6i 加内分泌用到进展，再上 8201，效果大家都知道。"},{"who":"rep","stage":"探询","text":"8201 在后线的作用大家都认可，您的经验也很宝贵。想请教一下，您病区一线 CDK4/6i 加内分泌的患者，一般多久会进展？"},{"who":"doc","stage":"探询","text":"快的半年一年，慢的两三年，差别很大。"},{"who":"rep","stage":"探询","text":"进展快的那些，您觉得有什么共同点吗？"},{"who":"doc","stage":"探询","text":"内脏转移多的、辅助内分泌时就复发的，一般都快。"},{"who":"rep","stage":"传递","text":"您说的辅助内分泌时就复发的，就是内分泌耐药人群，其中 PIK3CA 突变的比例不低，中国数据约四成多。INAVO120 研究的正是这类患者：内分泌耐药、PIK3CA 突变、晚期一线，哌柏西利加氟维司群中位 PFS 只有 7.3 个月，加上伊那利塞是 17.2 个月，最终 OS 34.0 比 27.0 个月，到第一次用化疗的时间是 35.6 比 12.6 个月。也就是说，一线用对方案，后面的化疗或 ADC 可以往后推。"},{"who":"doc","stage":"传递","text":"PI3K 抑制剂后线没什么数据，副作用还多。"},{"who":"rep","stage":"异议处理","text":"您说得对，CDK4/6i 经治后，伊那利塞目前没有 III 期数据，所以我今天只谈一线。安全性方面，主要是高血糖、口腔炎、腹泻，发生得早，也都有对应办法：用药前查空腹血糖和HbA1c，第一周每 3 天测一次，首选二甲双胍；口腔炎一出现就用不含酒精的皮质类固醇漱口水；腹泻第一次出现就止泻补液。说明书里因不良反应停用伊那利塞的是 6%。"},{"who":"doc","stage":"异议处理","text":"检测了也是后线才用得上吧？"},{"who":"rep","stage":"异议处理","text":"如果一线治疗前测，PIK3CA 突变的内分泌耐药患者一线就可以考虑三联；没突变的，您照原来的方案。进展后要选后线，指南也按 PIK3CA、AKT1、PTEN、ESR1、BRCA 这些分层，一次NGS 都能看到，跟 8201 的选择也不冲突。"},{"who":"rep","stage":"缔结","text":"能不能先在您病区试一个月：新发的 HR+/HER2-晚期患者，一线治疗前送一次 PIK3CA？另外我想约一次 15 分钟的科室会，把生物标志物分层和不良反应管理清单跟大家过一遍。"},{"who":"doc","stage":"缔结","text":"检测可以先试。科室会你跟护士长约时间。"}],"followups":[{"q":"8201 我用了这么多年，效果明摆着。","a":"认同，ADC 在后线有重要作用。我们讨论的是它之前的一线：用检测把 PIK3CA 突变的内分泌耐药患者分出来，两者不冲突。"},{"q":"HER2 低表达的患者也要测 PIK3CA 吗？","a":"HER2 状态和 PIK3CA 是两个独立的标志物；HR+/HER2-（包括 HER2 低表达）的晚期患者，一线治疗前都在检测共识的推荐范围内。"},{"q":"三联口腔溃疡太多，患者受不了。","a":"口腔黏膜炎发生率约 51%，3 级约 6%，中位 13 天出现；一出现就用不含酒精的皮质类固醇漱口水（INAVO120 用的是含地塞米松漱口水），避免辛辣；2 级暂停到≤1 级后原剂量恢复；因口腔炎停药0.6%（说明书）。"}],"fix":{"orig":"T-DXd 适用前提","fix":"以优赫得说明书为准，不评价竞品"}},{"no":10,"title":"检测转化+疑难异议：把 PIK3CA 检测推进为一线治疗前常规","profile":"何主任｜华南某三甲医院乳腺中心带组/副主任医师，务实保守，语速快、爱反问；坚持「现方案够用、进展了再测、高血糖管不过来」。科室每月 8–12 例新发 HR+/HER2-晚期患者，PIK3CA 检测率约20%，多为耐药后补测。场景：周一大查房后办公室，约 10 分钟空档。","goal":"节奏快、每句话短；三个异议各用一个证据回应；按 SMART 落到「下月新发患者治疗前送检」，保底约 15 分钟科室会或 MDT。","close":"SMART 主目标：下个月起，科室新发 HR+/HER2-晚期患者在一线治疗前完成 PIK3CA 检测，月底回看检测率；保底：约 15 分钟科室会或 MDT。","points":[{"title":"现方案够用","says":"「CDK4/6i 加内分泌都能做到二十多个月，够用了。」","bullets":["认同 CDK4/6i+ET 是一线标准。","但对 PIK3CA 突变、内分泌耐药患者，INAVO120 对照组（哌柏西利+氟维司群）mPFS 只有 7.3 个月；三联 17.2 个月，OS 34.0 vs 27.0 个月。","PIK3CA 在中国 HR+乳腺癌中约 45.6%（医保申报材料）。"],"basis":"INAVO120；医保申报材料"},{"title":"进展了再测","says":"「进展了再测也不迟。」","bullets":["进展后再测，患者已用过一线方案，错过一线三联的时点。","共识推荐一线治疗前常规检测；PCR 约 3–5 天、NGS 约 1–2 周，组织不可及时用血浆。"],"basis":"检测共识 2025"},{"title":"高血糖管不过来","says":"「高血糖我们管不过来，内分泌科也忙。」","bullets":["管理三件套：治疗前测 FPG、HbA1c 并筛查高危因素；第 1 周每 3 天测空腹血糖，之后按说明书表格；二甲双胍一线，按 FPG 分级暂停或减量。","高危患者可考虑预防性使用二甲双胍（共识也提示：目前没有证据证明预防用药能降低发生率，作用是防止血糖突然升高）。","数据：首次发生中位 7 天；FPG>8.9 者 96%至少改善 1 级；因高血糖停药 1.2%（说明书）。","内分泌科会诊指征写清楚，减少不必要会诊。"],"basis":"说明书；2026 高血糖共识"}],"cautions":["案例里「2025.3.14 优先审评获批」：说明书核准日期是 2025-03-11，讲 3 月 11 日。","「当年入保」改成「2026 年 1 月起执行国家医保」。","「2026 ESMO 北肿真实世界 36 例零因 AE 停药」：目前收集到的资料里查不到这条，核实出处之前不要讲。","「预防性二甲双胍」不要讲成所有患者的常规，说「高危患者可考虑」。","45.6%来自医保申报材料，讲题里也有 46.5%的写法，讲的时候说清出处。"],"dialog":[{"who":"rep","stage":"开场","text":"何主任，查房辛苦。我只占您 5 分钟，说一件事：新发晚期 HR+/HER2-患者，一线治疗前测PIK3CA。"},{"who":"doc","stage":"开场","text":"又是检测。现方案够用，CDK4/6 加内分泌都能做到二十多个月。"},{"who":"rep","stage":"探询","text":"CDK4/6 加内分泌是一线标准，没错。想问一句：科室每月新发的晚期患者，辅助内分泌时就复发的大概占多少？"},{"who":"doc","stage":"探询","text":"三分之一吧。"},{"who":"rep","stage":"传递","text":"这三分之一里，PIK3CA 突变的比例不低，中国数据约 45.6%。这类内分泌耐药又有突变的患者，INAVO120 里哌柏西利加氟维司群中位 PFS 只有 7.3 个月，加上伊那利塞是 17.2 个月，最终 OS 34.0 比 27.0 个月。不测，就分不出这群人。"},{"who":"doc","stage":"传递","text":"进展了再测也不迟。"},{"who":"rep","stage":"异议处理","text":"进展后再测，患者已经用过一线了，就错过了一线三联的时点。共识推荐的就是一线治疗前常规测。PCR 三到五天，NGS 一到两周，组织取不到用血浆。"},{"who":"doc","stage":"异议处理","text":"高血糖呢？我们管不过来。"},{"who":"rep","stage":"异议处理","text":"三件事：治疗前测空腹血糖和 HbA1c，筛查高危；第一周每三天测一次，之后按说明书的表；首选二甲双胍，按血糖分级暂停或减量。高血糖中位 7 天出现，超过 8.9 的 96%能改善至少一级，因高血糖停药 1.2%。高危患者可以考虑预防性用二甲双胍，这点共识也有讨论。"},{"who":"doc","stage":"异议处理","text":"你直接说要我干什么。"},{"who":"rep","stage":"缔结","text":"两件事。第一，下个月起，科室新发晚期 HR+/HER2-患者，一线治疗前都送 PIK3CA，月底我把检测率整理给您。第二，找个周一查房后的 15 分钟，我请内分泌科一起，跟组里过一遍血糖管理表。"},{"who":"doc","stage":"缔结","text":"第一件可以试。第二件你约护士长。"},{"who":"rep","stage":"缔结","text":"好，今天就跟护士长约。谢谢主任。"}],"followups":[{"q":"你就说一句话，为什么要测？","a":"不测，就分不出内分泌耐药、PIK3CA 突变的这群一线患者，而他们有 III 期 OS 获益的方案。"},{"q":"检测率 20%怎么了，别的医院也差不多。","a":"不和别的医院比。共识推荐一线治疗前常规检测，科室从 20%往上走一步就是进步，先试一个月看数据。"},{"q":"二甲双胍预防？我们科没这个习惯。","a":"共识也提示，目前没有证据证明预防用药能降低高血糖发生率，所以不必作为常规。关键是基线评估和首周监测，血糖升高时二甲双胍一线。"}],"fix":{"orig":"「2025.3.14 获批」「当年入保」「北肿 36 例零因 AE 停药」「预防性二甲双胍」","fix":"核准日期 2025-03-11；医保 2026 年 1 月起执行；北肿数据核实出处前不讲；预防用药说「高危患者可考虑」"}}],"quickref":[{"k":"INAVO120 人群","v":"内分泌耐药（辅助内分泌治疗期间或结束后 12 个月内复发）、晚期未接受过系统治疗、PIK3CA 突变、HR+/HER2-；N=325；绝大多数（301例）用血浆 ctDNA 确认突变","src":"NEJM 2024；产品资料"},{"k":"中国适应症原文","v":"本品联合哌柏西利和氟维司群，适用于内分泌治疗耐药（包括在辅助内分泌治疗期间或之后出现复发）、PIK3CA 突变、HR 阳性、HER2 阴性的局部晚期或转移性乳腺癌成人患者","src":"说明书"},{"k":"mPFS","v":"最终分析 17.2 vs 7.3 个月，HR 0.42（描述性更新）；说明书收录的是主要分析 15.0 vs 7.3 个月，HR 0.43","src":"NEJM 2025；说明书"},{"k":"mOS","v":"34.0 vs 27.0 个月，HR 0.67（95%CI 0.48–0.94），p=0.0190，死亡风险降低 33%","src":"说明书（2026-07 版已收录）"},{"k":"ORR / 至首次后续化疗","v":"ORR 62.7% vs 28.0%；至首次后续化疗 35.6 vs 12.6 个月，HR 0.43","src":"NEJM 2025；过审讲题"},{"k":"高血糖","v":"首次发生中位 7 天；FPG>8.9 mmol/L 者 96%至少改善 1 级，中位 8 天；因高血糖停药 1.2%（说明书）；≥3 级 6.8%（最终分析）；说明书按实验室值统计任何级别 85%、3–4 级 12.6%（口径不同，被问到要解释）","src":"说明书；NEJM 2025"},{"k":"高血糖亚组（事后分析）","v":"发生高血糖者 mPFS 21.0 个月，未发生者 12.8 个月，安慰剂组 7.3 个月——只能说「无论是否发生高血糖都获益」","src":"ESMO BC 2026"},{"k":"因 AE 停用伊那利塞","v":"6%（说明书，主要分析）；6.8%（最终分析）","src":"说明书；NEJM 2025"},{"k":"血糖监测","v":"第 1 周每 3 天测空腹血糖→第 2–4 周每周→随后 8 周每 2 周→此后每 4 周；HbA1c 每 3 个月；治疗前测 FPG 和 HbA1c，空腹血糖优化前不给药","src":"说明书"},{"k":"PIK3CA 突变率","v":"中国 HR+乳腺癌约 45.6%（医保申报材料）；讲题中也有 46.5%的写法，引用时说清出处","src":"医保申报；讲题"},{"k":"检测","v":"一线治疗前常规检测；组织优先（转移灶优于原发灶），组织不可及时血浆 ctDNA 补充；NGS 或 PCR 均可；ctDNA 阴性要评估组织；组织 PCR阴性而有治疗需求者建议 NGS 复检；PCR 约 3–5 天、NGS 约 1–2 周出报告","src":"检测共识 2025；讲题"},{"k":"组织与血浆一致性","v":"多项研究约 70.4%–94%（也有研究低至约 55%–60%，所以「组织优先」）","src":"讲题"},{"k":"指南","v":"CBCS 2026：既往未用 CDK4/6i、辅助内分泌治疗期间或结束后复发、PIK3CA 突变→哌柏西利+伊那利塞+氟维司群；NCCN 一线 1 类；ESMO I,A；CSCO 2025 II 级","src":"各指南"},{"k":"医保","v":"伊赫莱 2026 年 1 月起执行国家医保；赫双妥三个适应症 2025 年 1 月 1 日起执行","src":"过审讲题"},{"k":"赫双妥","v":"FeDeriCa：帕妥珠单抗 Ctrough 非劣效，tpCR 59.7% vs 59.5%，安全性总体相当；负荷剂量约 8 分钟、观察 30 分钟，维持剂量约 5 分钟、观察 15 分钟；PHranceSCa 85%患者偏好皮下","src":"说明书；FeDeriCa；PHranceSCa"}]};</script>
+<script>
+(function(){
+'use strict';
+var Q=DATA.questions, CASES=DATA.cases, REF=DATA.quickref;
+var QBY={};Q.forEach(function(q){QBY[q.id]=q;});
+var TOPICS=['HR+','Phesgo','皮下开关'];
+var LET='ABCD';
+var STAGES=['开场','探询','传递','异议处理','缔结'];
+var STAGE_TIP={'开场':'说明来意、接上次的话题，一两句话，控制好时间。','探询':'先问后讲：用开放式问题了解科室现在怎么做、卡在哪里。','传递':'只讲一个核心证据，数字说准、说清出处。','异议处理':'先认同顾虑，再用一个证据回应；不越权、不下结论。','缔结':'提出具体可执行的下一步：主目标加保底，约好时间。'};
+var RUBRIC=['开场说明来意，接上了上次的话题','先问后讲，用开放式问题了解了科室现状','引用的数字准确，并说清了出处（研究、说明书或共识）','异议先认同、再用证据回应，一个异议一个证据','守住合规：不越权解读报告，不评价价格和竞品，不夸大','结尾提出了具体的下一步（主目标加保底）'];
+var EXAM_SEC=180, EXAM_SINGLE=7, EXAM_MULTI=3;
+
+/* ---------- storage ---------- */
+var NS='zlsx1.';var mem={};
+function sget(k,d){try{var v=localStorage.getItem(NS+k);return v==null?d:JSON.parse(v);}catch(e){return k in mem?mem[k]:d;}}
+function sset(k,v){mem[k]=v;try{localStorage.setItem(NS+k,JSON.stringify(v));}catch(e){}}
+function sdel(k){delete mem[k];try{localStorage.removeItem(NS+k);}catch(e){}}
+
+/* ---------- utils ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function ansIdx(q){return q.answer.split('').map(function(c){return LET.indexOf(c);}).sort();}
+function sameSet(a,b){if(a.length!==b.length)return false;a=a.slice().sort();b=b.slice().sort();for(var i=0;i<a.length;i++)if(a[i]!==b[i])return false;return true;}
+function isRight(q,sel){return sameSet(sel||[],ansIdx(q));}
+function letters(q,sel,order){ // sel: original idx -> display letters
+  order=order||[0,1,2,3];
+  return (sel||[]).map(function(i){return LET[order.indexOf(i)];}).sort().join('');
+}
+function fmtTime(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);}
+function fmtDate(t){var d=new Date(t);return (d.getMonth()+1)+'月'+d.getDate()+'日 '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
+var toastT;function toast(msg){var el=document.querySelector('.toast');if(!el){el=document.createElement('div');el.className='toast';document.body.appendChild(el);}el.textContent=msg;el.style.display='block';clearTimeout(toastT);toastT=setTimeout(function(){el.style.display='none';},1600);}
+function topicCls(t){return t;}
+
+/* ---------- records ---------- */
+function rec(){return sget('rec',{});}           // qid -> {s:[sel], ok:bool, v:viewed, t}
+function setRec(qid,sel,ok,viewed){var r=rec();r[qid]={s:sel,ok:ok,v:!!viewed,t:Date.now()};sset('rec',r);
+  if(!ok) addWrong(qid);}
+function wrongs(){return sget('wrong',[]);}
+function addWrong(id){var w=wrongs();if(w.indexOf(id)<0){w.push(id);sset('wrong',w);}}
+function delWrong(id){sset('wrong',wrongs().filter(function(x){return x!==id;}));}
+function favs(){return sget('fav',[]);}
+function toggleFav(id){var f=favs();var i=f.indexOf(id);if(i<0)f.push(id);else f.splice(i,1);sset('fav',f);return i<0;}
+
+/* ---------- router ---------- */
+var app=document.getElementById('app');
+var view={};             // transient view state
+function go(h){if(location.hash===h)render();else location.hash=h;}
+window.addEventListener('hashchange',function(){view={};stopTimer();render();window.scrollTo(0,0);});
+function parts(){return (location.hash||'#/').slice(2).split('/');}
+function render(){
+  var p=parts();var r=p[0]||'';
+  closeSheet();
+  if(r==='')return vHome();
+  if(r==='practice')return vPractice();
+  if(r==='random')return p[1]==='run'?vSession('random'):vRandomSetup();
+  if(r==='exam')return p[1]==='run'?vExamRun():p[1]==='result'?vExamResult(p[2]):vExamIntro();
+  if(r==='book')return p[2]==='run'?vSession('book-'+p[1]):vBook(p[1]);
+  if(r==='rp')return p[1]?vCase(+p[1],p[2]||'card'):vCases();
+  if(r==='ref')return vRef();
+  if(r==='about')return vAbout();
+  return vHome();
+}
+function top(title,back,extra){return '<div class="top">'+(back!==false?'<button class="back" data-act="back" data-arg="'+esc(back||'#/')+'">‹ 返回</button>':'')+'<h1>'+esc(title)+'</h1>'+(extra||'')+'</div>';}
+function bar(html){return '<div class="bar"><div class="bar-in">'+html+'</div></div>';}
+function foot(){return '<div class="foot">内部学术演练资料，仅作培训使用 · 数据只存在本机</div>';}
+
+/* ---------- home ---------- */
+function vHome(){
+  var r=rec();var ids=Object.keys(r).filter(function(k){return QBY[k];});
+  var done=ids.length, ok=ids.filter(function(k){return r[k].ok;}).length;
+  var hist=sget('examHist',[]);var best=hist.reduce(function(m,h){return Math.max(m,h.score);},-1);
+  var rpd=sget('rpDone',{});var rpn=Object.keys(rpd).length;
+  var h='<div class="hero"><h1>智领靶向 · 随身练</h1><p>两广海南智领靶向题库 '+Q.length+' 题 · 拜访演练 '+CASES.length+' 例</p>'+
+  '<div class="stats"><div class="stat"><b>'+done+'</b><span>已练题数</span></div><div class="stat"><b>'+(done?Math.round(ok/done*100)+'%':'—')+'</b><span>正确率</span></div><div class="stat"><b>'+wrongs().length+'</b><span>错题</span></div><div class="stat"><b>'+(best<0?'—':best)+'</b><span>考试最高分</span></div></div></div>';
+  h+='<div class="wrap">';
+  h+=modeBtn('1','练习模式','按顺序从第 1 题做到最后，选完立即揭晓对错，想不起来可直接看答案','#/practice');
+  h+=modeBtn('2','随机模式','题目和选项顺序每次打乱，自选题量和方向','#/random');
+  h+=modeBtn('3','考试模式','随机 7 道单选 + 3 道多选，限时 3 分钟，满分 100 分，交卷后复盘','#/exam');
+  h+=modeBtn('4','Roleplay 拜访演练','10 个拜访案例：要点、一对一分阶段对练、主任追问（已完成 '+rpn+'/'+CASES.length+'）','#/rp');
+  h+='<div class="sec-title">工具</div><div class="tools">'+
+     toolBtn(wrongs().length,'错题本','#/book/wrong')+toolBtn(favs().length,'收藏','#/book/fav')+toolBtn('速','数字速查','#/ref')+toolBtn('?','使用说明','#/about')+'</div>';
+  h+='</div>'+foot();
+  app.innerHTML=h;
+}
+function modeBtn(no,t,d,href){return '<button class="mode" data-act="go" data-arg="'+href+'"><span class="no">'+no+'</span><span><h3>'+esc(t)+'</h3><p>'+esc(d)+'</p></span></button>';}
+function toolBtn(n,t,href){return '<button class="tool" data-act="go" data-arg="'+href+'"><b>'+esc(n)+'</b>'+esc(t)+'</button>';}
+
+/* ---------- question card ---------- */
+// ctx: {q, order, sel(orig idx[]), revealed, viewed, interactive}
+function qCard(ctx,head){
+  var q=ctx.q,order=ctx.order||[0,1,2,3],ans=ansIdx(q),sel=ctx.sel||[];
+  var h='<div class="card">';
+  h+='<div class="q-meta">'+(head||'')+'<span class="badge '+(q.type==='multi'?'multi':'')+'">'+(q.type==='multi'?'多选':'单选')+'</span><span class="badge topic">'+esc(q.topic)+'</span></div>';
+  h+='<p class="q-stem">'+esc(q.stem)+'</p>';
+  order.forEach(function(oi,pos){
+    var cls='opt'+(q.type==='multi'?' multi':'');
+    if(ctx.revealed){
+      var isA=ans.indexOf(oi)>=0,isS=sel.indexOf(oi)>=0;
+      if(isA&&isS)cls+=' right';else if(isS&&!isA)cls+=' wrong';else if(isA)cls+=(sel.length||ctx.viewed?' right':' right');
+    }else if(sel.indexOf(oi)>=0)cls+=' sel';
+    h+='<button class="'+cls+'" '+(ctx.revealed||!ctx.interactive?'disabled':'data-act="pick" data-arg="'+oi+'"')+'><span class="k">'+LET[pos]+'</span><span>'+esc(q.options[oi])+'</span></button>';
+  });
+  if(ctx.revealed){
+    var right=isRight(q,sel);var corr=letters(q,ans,order);
+    var cls=ctx.viewed&&!sel.length?'view':(right?'ok':'bad');
+    var title=ctx.viewed&&!sel.length?'正确答案：<b>'+corr+'</b>':(right?'回答正确':'回答错误　你选 '+(letters(q,sel,order)||'未选')+'，正确答案 <b>'+corr+'</b>');
+    if(!right&&q.type==='multi'&&sel.length&&sel.every(function(i){return ans.indexOf(i)>=0;}))title='少选了　你选 '+letters(q,sel,order)+'，正确答案 <b>'+corr+'</b>';
+    h+='<div class="verdict '+cls+'">'+title+(q.explain?'<div class="explain">'+esc(q.explain)+'<span class="src">出处：'+esc(q.source||'')+'</span></div>':'')+
+       notes(q)+'</div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+function notes(q){return (q.fixnote?'<div class="fixnote">题库修订：'+esc(q.fixnote)+'</div>':'')+(q.check?'<div class="fixnote">待核：'+esc(q.check)+'</div>':'')+(q.caution?'<div class="src">提示：'+esc(q.caution)+'</div>':'');}
+/* ---------- practice (sequential) ---------- */
+function pFilter(){return sget('pFilter',{topics:[],type:''});}
+function pList(){var f=pFilter();return Q.filter(function(q){return (!f.topics.length||f.topics.indexOf(q.topic)>=0)&&(!f.type||q.type===f.type);});}
+function pKey(){var f=pFilter();return 'pPos.'+(f.topics.slice().sort().join(',')||'all')+'.'+(f.type||'all');}
+function vPractice(){
+  var list=pList();var f=pFilter();
+  var pos=Math.min(sget(pKey(),0),Math.max(0,list.length-1));
+  var h=top('练习模式','#/','<span class="tag">'+(list.length?(pos+1)+' / '+list.length:'0')+'</span>');
+  h+='<div class="wrap">';
+  h+='<div class="chips" style="margin-bottom:10px">'+TOPICS.map(function(t){return '<button class="chip'+(f.topics.indexOf(t)>=0?' on':'')+'" data-act="pTopic" data-arg="'+esc(t)+'">'+esc(t)+'</button>';}).join('')+
+     '<button class="chip'+(f.type==='single'?' on':'')+'" data-act="pType" data-arg="single">单选</button><button class="chip'+(f.type==='multi'?' on':'')+'" data-act="pType" data-arg="multi">多选</button>'+
+     ((f.topics.length||f.type)?'<button class="link" data-act="pReset">一键重置</button>':'')+'</div>';
+  if(!list.length){app.innerHTML=h+'<div class="empty">暂无数据</div></div>';return;}
+  var q=list[pos];var r=rec()[q.id];
+  var vs=view.p&&view.p.id===q.id?view.p:{id:q.id,sel:r?r.s.slice():[],revealed:!!r,viewed:r&&r.v};
+  view.p=vs;
+  h+='<div class="progress"><i style="width:'+((pos+1)/list.length*100)+'%"></i></div>';
+  h+=qCard({q:q,sel:vs.sel,revealed:vs.revealed,viewed:vs.viewed,interactive:true},'<span>第 '+(pos+1)+' 题</span>');
+  var fav=favs().indexOf(q.id)>=0;
+  h+='<div class="row" style="margin-top:-2px">';
+  if(!vs.revealed){
+    if(q.type==='multi')h+='<button class="btn" data-act="pSubmit" '+(vs.sel.length?'':'disabled')+'>提交答案</button>';
+    h+='<button class="btn ghost" data-act="pView">看答案</button>';
+  }else h+='<button class="btn gray" data-act="pRedo">重做本题</button>';
+  h+='<button class="btn gray'+(fav?' fav-on':'')+'" data-act="fav" data-arg="'+q.id+'">'+(fav?'已收藏':'收藏')+'</button></div>';
+  h+='</div>';
+  h+=bar('<button class="btn gray" data-act="pMove" data-arg="-1" '+(pos?'':'disabled')+'>上一题</button><button class="mid" data-act="pSheet">题号 ▴</button><button class="btn" data-act="pMove" data-arg="1" '+(pos<list.length-1?'':'disabled')+'>下一题</button>');
+  app.innerHTML=h;
+}
+function pPick(oi){var vs=view.p,q=QBY[vs.id];if(vs.revealed)return;
+  if(q.type==='single'){vs.sel=[oi];vs.revealed=true;setRec(q.id,vs.sel,isRight(q,vs.sel));}
+  else{var i=vs.sel.indexOf(oi);if(i<0)vs.sel.push(oi);else vs.sel.splice(i,1);}
+  render();
+}
+
+/* ---------- sheet (jump grid) ---------- */
+function openSheet(html){closeSheet();var m=document.createElement('div');m.className='sheet-mask';m.innerHTML='<div class="sheet">'+html+'</div>';m.addEventListener('click',function(e){if(e.target===m)closeSheet();});document.body.appendChild(m);}
+function closeSheet(){var m=document.querySelector('.sheet-mask');if(m)m.remove();}
+function pSheet(){
+  var list=pList(),r=rec(),pos=sget(pKey(),0);
+  var h='<h3>题号</h3><div class="legend"><span><i style="background:var(--ok-bg);border:1px solid #A7DDB7"></i>答对</span><span><i style="background:var(--bad-bg);border:1px solid #F3B4AD"></i>答错或看了答案</span><span><i style="background:#fff;border:1px solid var(--line)"></i>未做</span></div><div class="grid">';
+  list.forEach(function(q,i){var x=r[q.id];h+='<button class="cell'+(x?(x.ok?' r':' w'):'')+(i===pos?' cur':'')+'" data-act="pJump" data-arg="'+i+'">'+(i+1)+'</button>';});
+  h+='</div><div style="margin-top:14px"><button class="btn gray block" data-act="pClear">清空练习记录</button></div>';
+  openSheet(h);
+}
+
+/* ---------- random / book sessions ---------- */
+function vRandomSetup(){
+  var st=view.rs||(view.rs={topics:sget('rsTopics',[]),type:'',n:sget('rsN',20)});
+  var pool=Q.filter(function(q){return (!st.topics.length||st.topics.indexOf(q.topic)>=0)&&(!st.type||q.type===st.type);});
+  var h=top('随机模式','#/')+'<div class="wrap">';
+  var ses=sget('ses.random',null);
+  if(ses&&ses.idx<ses.ids.length)h+='<div class="infobox" style="margin-bottom:12px">上次还有一组没做完（'+Object.keys(ses.ans).length+'/'+ses.ids.length+'）。<button class="link" data-act="go" data-arg="#/random/run">继续上次</button></div>';
+  h+='<div class="card"><div class="h4">方向（可多选，不选即全部）</div><div class="chips">'+TOPICS.map(function(t){return '<button class="chip'+(st.topics.indexOf(t)>=0?' on':'')+'" data-act="rsTopic" data-arg="'+esc(t)+'">'+esc(t)+'</button>';}).join('')+(st.topics.length?'<button class="link" data-act="rsReset">一键重置</button>':'')+'</div>';
+  h+='<div class="h4" style="margin-top:14px">题型</div><div class="chips">'+[['','全部'],['single','单选'],['multi','多选']].map(function(x){return '<button class="chip'+(st.type===x[0]?' on':'')+'" data-act="rsType" data-arg="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div>';
+  var n=Math.min(st.n,pool.length);
+  h+='<div class="h4" style="margin-top:14px">本次题量（共 '+pool.length+' 题可抽）</div><div class="chips">'+[10,20,30,50].filter(function(x){return x<pool.length;}).map(function(x){return '<button class="chip'+(n===x?' on':'')+'" data-act="rsN" data-arg="'+x+'">'+x+' 题</button>';}).join('')+
+     '<button class="chip'+(n===pool.length?' on':'')+'" data-act="rsN" data-arg="'+pool.length+'">全部</button></div>'+
+     '<div style="margin-top:10px;font-size:14px;color:var(--ink-2)">自定义：<input type="number" min="1" max="'+pool.length+'" value="'+n+'" data-inp="rsN"> 题</div></div>';
+  h+='<p class="note">每次开始都会重新打乱题目顺序和选项顺序；选完即揭晓对错，也可以直接看答案。</p></div>';
+  h+=bar('<button class="btn" data-act="rsStart" '+(pool.length?'':'disabled')+'>开始练习（'+n+' 题）</button>');
+  app.innerHTML=h;
+}
+function newSession(ids){var orders={};ids.forEach(function(id){orders[id]=shuffle([0,1,2,3]);});return {ids:ids,orders:orders,idx:0,ans:{},t:Date.now()};}
+function vSession(kind){
+  var key='ses.'+kind;var ses=sget(key,null);
+  var title=kind==='random'?'随机模式':kind==='book-wrong'?'错题重练':'收藏练习';
+  var back=kind==='random'?'#/random':'#/book/'+kind.slice(5);
+  if(!ses||!ses.ids.length){app.innerHTML=top(title,back)+'<div class="empty">暂无数据</div>';return;}
+  if(ses.idx>=ses.ids.length)return vSessionEnd(kind,ses,title,back);
+  var id=ses.ids[ses.idx],q=QBY[id];if(!q){ses.idx++;sset(key,ses);return render();}
+  var a=ses.ans[id]||{sel:[],revealed:false};
+  view.s={kind:kind,key:key};
+  var h=top(title,back,'<span class="tag">'+(ses.idx+1)+' / '+ses.ids.length+'</span>')+'<div class="wrap">';
+  h+='<div class="progress"><i style="width:'+((ses.idx+1)/ses.ids.length*100)+'%"></i></div>';
+  h+=qCard({q:q,order:ses.orders[id],sel:a.sel,revealed:a.revealed,viewed:a.viewed,interactive:true},'<span>第 '+(ses.idx+1)+' 题</span>');
+  var fav=favs().indexOf(id)>=0;
+  h+='<div class="row">';
+  if(!a.revealed){if(q.type==='multi')h+='<button class="btn" data-act="sSubmit" '+(a.sel.length?'':'disabled')+'>提交答案</button>';h+='<button class="btn ghost" data-act="sView">看答案</button>';}
+  h+='<button class="btn gray'+(fav?' fav-on':'')+'" data-act="fav" data-arg="'+id+'">'+(fav?'已收藏':'收藏')+'</button></div>';
+  if(kind==='book-wrong'&&a.revealed&&isRight(q,a.sel))h+='<p class="note">答对了，这题已从错题本移出。</p>';
+  h+='</div>';
+  h+=bar('<button class="btn gray" data-act="sMove" data-arg="-1" '+(ses.idx?'':'disabled')+'>上一题</button><button class="mid" data-act="sQuit">结束</button><button class="btn" data-act="sMove" data-arg="1">'+(ses.idx<ses.ids.length-1?'下一题':'看结果')+'</button>');
+  app.innerHTML=h;
+}
+function sAnswer(fn){var k=view.s.key;var ses=sget(k,null);var id=ses.ids[ses.idx],q=QBY[id];var a=ses.ans[id]||{sel:[],revealed:false};fn(a,q);ses.ans[id]=a;sset(k,ses);
+  if(a.revealed&&!a.recorded){a.recorded=true;ses.ans[id]=a;sset(k,ses);var ok=!a.viewed&&isRight(q,a.sel);setRec(id,a.sel,ok,a.viewed);if(view.s.kind==='book-wrong'&&ok)delWrong(id);}
+  render();}
+function vSessionEnd(kind,ses,title,back){
+  var ids=ses.ids,ok=0,wrong=[];
+  ids.forEach(function(id){var a=ses.ans[id];if(a&&a.revealed&&!a.viewed&&isRight(QBY[id],a.sel))ok++;else wrong.push(id);});
+  var h=top(title+' · 结果',back)+'<div class="wrap"><div class="card"><div class="big-score"><b>'+ok+'</b><span> / '+ids.length+' 题答对</span></div>'+
+    '<div class="kv"><span>正确率</span><b>'+Math.round(ok/ids.length*100)+'%</b></div><div class="kv"><span>答错、没做或看了答案</span><b>'+wrong.length+' 题</b></div></div>';
+  if(wrong.length){h+='<div class="sec-title">需要再看的题</div>'+wrong.map(function(id){return reviewItem(QBY[id],(ses.ans[id]||{}).sel||[],ses.orders[id],null);}).join('');}
+  h+='</div>'+bar('<button class="btn gray" data-act="go" data-arg="#/">回首页</button>'+(kind==='random'?'<button class="btn" data-act="rsAgain">再来一组</button>':'<button class="btn" data-act="go" data-arg="'+back+'">返回列表</button>'));
+  app.innerHTML=h;
+}
+function reviewItem(q,sel,order,pts){
+  order=order||[0,1,2,3];var ans=ansIdx(q);
+  var h='<div class="rv"><div class="rv-h"><span class="badge '+(q.type==='multi'?'multi':'')+'">'+(q.type==='multi'?'多选':'单选')+'</span><span class="badge topic">'+esc(q.topic)+'</span>'+(pts!=null?'<span class="pts '+(pts===10?'ok':pts>0?'half':'bad')+'">'+pts+' 分</span>':'')+'</div><div class="rv-s">'+esc(q.stem)+'</div>';
+  order.forEach(function(oi,pos){var c=ans.indexOf(oi)>=0,s=sel.indexOf(oi)>=0;h+='<div class="rv-o'+(c?' c':s?' x':'')+'">'+LET[pos]+'. '+esc(q.options[oi])+(c&&s?'（你选对了）':c?'（正确答案）':s?'（你选的）':'')+'</div>';});
+  h+='<div class="rv-a" style="margin-top:6px">你选 <b>'+(letters(q,sel,order)||'未作答')+'</b>，正确答案 <b>'+letters(q,ans,order)+'</b></div>';
+  if(q.explain)h+='<div class="explain">'+esc(q.explain)+'<span class="src">出处：'+esc(q.source||'')+'</span></div>';
+  h+=notes(q);
+  return h+'</div>';
+}
+
+/* ---------- book ---------- */
+function vBook(which){
+  var ids=(which==='fav'?favs():wrongs()).filter(function(id){return QBY[id];});
+  var title=which==='fav'?'收藏':'错题本';
+  var h=top(title,'#/','<span class="tag">'+ids.length+' 题</span>')+'<div class="wrap">';
+  if(which!=='fav')h+='<p class="note" style="margin-top:0">答错的题、点过「看答案」的题会自动进来；在「错题重练」里答对就移出。</p>';
+  if(!ids.length){app.innerHTML=h+'<div class="empty">暂无数据</div></div>';return;}
+  var r=rec();
+  ids.slice().reverse().forEach(function(id){var q=QBY[id];var x=r[id];h+=reviewItem(q,x?x.s:[],null,null).replace('</div></div>','</div>'+'<div style="text-align:right;margin-top:4px"><button class="link" data-act="bookDel" data-arg="'+which+':'+id+'">移出</button></div></div>');});
+  h+='</div>'+bar('<button class="btn gray" data-act="bookClear" data-arg="'+which+'">清空</button><button class="btn" data-act="bookRun" data-arg="'+which+'">'+(which==='fav'?'练习收藏题':'错题重练')+'（'+ids.length+'）</button>');
+  app.innerHTML=h;
+}
+
+/* ---------- exam ---------- */
+var timer=null;function stopTimer(){if(timer){clearInterval(timer);timer=null;}}
+function vExamIntro(){
+  var ses=sget('ses.exam',null);
+  var hist=sget('examHist',[]);
+  var h=top('考试模式','#/')+'<div class="wrap">';
+  if(ses&&!ses.done&&Date.now()-ses.start<EXAM_SEC*1000)h+='<div class="infobox" style="margin-bottom:12px">有一场考试正在进行。<button class="link" data-act="go" data-arg="#/exam/run">回到考试</button></div>';
+  h+='<div class="card"><div class="h4">规则</div><ul class="b"><li>每次从题库随机抽 <b>7 道单选 + 3 道多选</b>，选项顺序也会打乱</li><li>限时 <b>3 分钟</b>，时间到自动交卷</li><li>每题 10 分，满分 100 分：单选选对得 10 分；多选全部选对得 10 分，少选（选的都对但没选全）得 5 分，选错或未作答不得分</li><li>交卷前不显示对错；交卷后可以看每题答案、解析和各方向的得分，按提示复盘</li></ul></div>';
+  if(hist.length){h+='<div class="sec-title">最近的考试</div><div class="card">'+hist.slice(0,8).map(function(x,i){return '<div class="kv"><span>'+fmtDate(x.t)+' · 用时 '+fmtTime(x.used)+'</span><span><b>'+x.score+'</b> 分 <button class="link" data-act="go" data-arg="#/exam/result/'+i+'">复盘</button></span></div>';}).join('')+'</div>';}
+  h+='</div>'+bar('<button class="btn" data-act="examStart">开始考试</button>');
+  app.innerHTML=h;
+}
+function examStart(){
+  var s=shuffle(Q.filter(function(q){return q.type==='single';})).slice(0,EXAM_SINGLE).map(function(q){return q.id;});
+  var m=shuffle(Q.filter(function(q){return q.type==='multi';})).slice(0,EXAM_MULTI).map(function(q){return q.id;});
+  var ses=newSession(s.concat(m));ses.start=Date.now();ses.done=false;sset('ses.exam',ses);go('#/exam/run');
+}
+function examLeft(ses){return EXAM_SEC-(Date.now()-ses.start)/1000;}
+function vExamRun(){
+  var ses=sget('ses.exam',null);
+  if(!ses||ses.done){go('#/exam');return;}
+  if(examLeft(ses)<=0){examSubmit(true);return;}
+  var id=ses.ids[ses.idx],q=QBY[id];var sel=(ses.ans[id]||{}).sel||[];
+  var answered=ses.ids.filter(function(x){return ses.ans[x]&&ses.ans[x].sel.length;}).length;
+  var h=top('考试中',false,'<span class="tag" id="clock">'+fmtTime(examLeft(ses))+'</span>')+'<div class="wrap">';
+  h+='<div class="enav">'+ses.ids.map(function(x,i){var a=ses.ans[x]&&ses.ans[x].sel.length;return '<button class="cell'+(a?' done':'')+(i===ses.idx?' cur':'')+'" data-act="eJump" data-arg="'+i+'">'+(i+1)+'</button>';}).join('')+'</div>';
+  h+=qCard({q:q,order:ses.orders[id],sel:sel,revealed:false,interactive:true},'<span>第 '+(ses.idx+1)+' / '+ses.ids.length+' 题</span>');
+  h+='<p class="note">已作答 '+answered+' / '+ses.ids.length+(q.type==='multi'?'　多选题可选多个，再点一次取消':'')+'</p></div>';
+  h+=bar('<button class="btn gray" data-act="eMove" data-arg="-1" '+(ses.idx?'':'disabled')+'>上一题</button>'+(ses.idx<ses.ids.length-1?'<button class="btn ghost" data-act="eMove" data-arg="1">下一题</button>':'')+'<button class="btn" data-act="eSubmit">交卷</button>');
+  app.innerHTML=h;
+  stopTimer();timer=setInterval(function(){var s2=sget('ses.exam',null);if(!s2||s2.done){stopTimer();return;}var l=examLeft(s2);var c=document.getElementById('clock');if(c){c.textContent=fmtTime(l);if(l<=30)c.className='tag red';}if(l<=0){stopTimer();examSubmit(true);}},500);
+}
+function ePick(oi){var ses=sget('ses.exam',null);var id=ses.ids[ses.idx],q=QBY[id];var a=ses.ans[id]||{sel:[]};
+  if(q.type==='single')a.sel=[oi];else{var i=a.sel.indexOf(oi);if(i<0)a.sel.push(oi);else a.sel.splice(i,1);}
+  ses.ans[id]=a;sset('ses.exam',ses);
+  if(q.type==='single'&&ses.idx<ses.ids.length-1){ses.idx++;sset('ses.exam',ses);setTimeout(render,180);render();}else render();}
+function scoreOf(q,sel){sel=sel||[];if(!sel.length)return 0;var ans=ansIdx(q);if(sameSet(sel,ans))return 10;if(q.type==='multi'&&sel.every(function(i){return ans.indexOf(i)>=0;}))return 5;return 0;}
+function examSubmit(auto){
+  var ses=sget('ses.exam',null);if(!ses||ses.done)return;
+  stopTimer();
+  var used=Math.min(EXAM_SEC,(Date.now()-ses.start)/1000);
+  var detail=ses.ids.map(function(id){var sel=(ses.ans[id]||{}).sel||[];var q=QBY[id];var p=scoreOf(q,sel);if(p<10)addWrong(id);
+    var r=rec();r[id]={s:sel,ok:p===10,v:false,t:Date.now()};sset('rec',r);return {id:id,sel:sel,order:ses.orders[id],pts:p};});
+  var score=detail.reduce(function(s,d){return s+d.pts;},0);
+  var hist=sget('examHist',[]);hist.unshift({t:Date.now(),score:score,used:Math.round(used),auto:!!auto,detail:detail});sset('examHist',hist.slice(0,20));
+  ses.done=true;sset('ses.exam',ses);
+  if(auto)toast('时间到，已自动交卷');
+  go('#/exam/result/0');
+}
+function vExamResult(i){
+  var hist=sget('examHist',[]);var x=hist[+i||0];if(!x){go('#/exam');return;}
+  var h=top('考试结果','#/exam')+'<div class="wrap">';
+  var sS=0,sM=0;x.detail.forEach(function(d){if(QBY[d.id]&&QBY[d.id].type==='multi')sM+=d.pts;else sS+=d.pts;});
+  h+='<div class="card"><div class="big-score"><b>'+x.score+'</b><span> 分</span></div>'+
+    '<div class="kv"><span>用时</span><b>'+fmtTime(x.used)+(x.auto?'（时间到自动交卷）':'')+'</b></div>'+
+    '<div class="kv"><span>单选（7 题，70 分）</span><b>'+sS+' 分</b></div><div class="kv"><span>多选（3 题，30 分）</span><b>'+sM+' 分</b></div></div>';
+  // topic analysis
+  var by={};x.detail.forEach(function(d){var q=QBY[d.id];if(!q)return;var t=by[q.topic]||(by[q.topic]={n:0,full:0,pts:0,max:0});t.n++;t.pts+=d.pts;t.max+=10;if(d.pts===10)t.full++;});
+  h+='<div class="sec-title">按方向看</div><div class="card">';
+  var weak=null;
+  Object.keys(by).forEach(function(t){var o=by[t];var r=o.pts/o.max;if(!weak||r<weak.r)weak={t:t,r:r};var cls=r<0.6?'low':r<0.85?'mid':'high';
+    h+='<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:14.5px"><span>'+esc(t)+'　'+o.n+' 题</span><span>'+o.pts+' / '+o.max+' 分</span></div><div class="meter '+cls+'"><i style="width:'+Math.round(r*100)+'%"></i></div></div>';});
+  h+='</div>';
+  // guidance
+  var wrongN=x.detail.filter(function(d){return d.pts<10;}).length;
+  h+='<div class="sec-title">复盘建议</div><div class="card">';
+  if(!wrongN)h+='<p class="p">满分。可以去 Roleplay 里练练把这些数字讲给主任听。</p><div style="margin-top:10px"><button class="btn ghost block" data-act="go" data-arg="#/rp">去拜访演练</button></div>';
+  else{
+    h+='<ol class="b" style="padding-left:20px;margin:0"><li>先看下面 '+wrongN+' 道没拿满分的题，对照解析弄清错在哪。</li>';
+    if(weak&&weak.r<1)h+='<li>本次最弱的方向是 <b>'+esc(weak.t)+'</b>，建议用练习模式把这一方向过一遍。</li>';
+    h+='<li>错题已自动放进错题本，过两天用「错题重练」再做一次，答对就会移出。</li>';
+    var rel=relatedCases(weak&&weak.t);if(rel.length)h+='<li>想把这些知识点用在拜访里，可以练 '+rel.map(function(n){return '<button class="link inl" data-act="go" data-arg="#/rp/'+n+'">案例 '+('0'+n).slice(-2)+'</button>';}).join('、')+'。</li>';
+    h+='</ol><div class="row" style="margin-top:12px">'+(weak?'<button class="btn ghost" data-act="practiceTopic" data-arg="'+esc(weak.t)+'">练「'+esc(weak.t)+'」</button>':'')+'<button class="btn ghost" data-act="examRedoWrong" data-arg="'+(+i||0)+'">错题再做一遍</button></div>';
+  }
+  h+='</div><div class="sec-title">逐题复盘</div>';
+  x.detail.forEach(function(d,k){var q=QBY[d.id];if(!q)return;h+=reviewItem(q,d.sel,d.order,d.pts).replace('<div class="rv-h">','<div class="rv-h"><span>第 '+(k+1)+' 题</span>');});
+  h+='</div>'+bar('<button class="btn gray" data-act="go" data-arg="#/">回首页</button><button class="btn" data-act="examStart">再考一次</button>');
+  app.innerHTML=h;
+}
+function relatedCases(topic){
+  if(topic==='Phesgo'||topic==='皮下开关')return CASES.filter(function(c){return /皮下|赫双妥/.test(c.title);}).map(function(c){return c.no;});
+  if(topic==='HR+')return CASES.filter(function(c){return !/皮下|赫双妥/.test(c.title);}).slice(0,3).map(function(c){return c.no;});
+  return [];
+}
+
+/* ---------- roleplay ---------- */
+function vCases(){
+  var d=sget('rpDone',{});
+  var h=top('Roleplay 拜访演练','#/')+'<div class="wrap">';
+  h+='<div class="infobox" style="margin-bottom:12px">怎么练：先看「案例」和「要点」，再进「对练」——程序扮主任，你扮代表，每一轮先用自己的话说，再看参考说法和关键词对照；最后用「追问」加练、对照清单自评。</div>';
+  CASES.forEach(function(c){var x=d[c.no];h+='<button class="case" data-act="go" data-arg="#/rp/'+c.no+'">'+(x?'<span class="done">已练 '+x.n+' 次</span>':'')+'<span class="cno">CASE '+('0'+c.no).slice(-2)+'</span><h3>'+esc(c.title)+'</h3><p>'+esc(c.profile)+'</p></button>';});
+  h+='<button class="btn ghost block" data-act="go" data-arg="#/ref">数字速查（演练时引用的口径）</button></div>'+foot();
+  app.innerHTML=h;
+}
+var TABS=[['card','案例'],['points','要点'],['drill','对练'],['follow','追问'],['notes','注意'],['script','全文']];
+function vCase(no,tab){
+  var c=CASES.filter(function(x){return x.no===no;})[0];if(!c){go('#/rp');return;}
+  var h=top('CASE '+('0'+no).slice(-2),'#/rp');
+  h+='<div class="tabs">'+TABS.map(function(t){return '<button class="tab'+(t[0]===tab?' on':'')+'" data-act="go" data-arg="#/rp/'+no+'/'+t[0]+'">'+t[1]+'</button>';}).join('')+'</div><div class="wrap">';
+  if(tab==='card'){
+    h+='<div class="card"><div class="h4">'+esc(c.title)+'</div></div>';
+    h+='<div class="card"><div class="h4">客户画像</div><p class="p">'+esc(c.profile)+'</p></div>';
+    h+='<div class="card"><div class="h4">本案目标</div><p class="p">'+esc(c.goal)+'</p></div>';
+    h+='<div class="card"><div class="h4">核心卡点</div><ul class="b">'+c.points.map(function(p,i){return '<li>卡点 '+(i+1)+'：'+esc(p.title)+'</li>';}).join('')+'</ul></div>';
+    h+='<div class="card"><div class="h4">闭环目标</div><p class="p">'+esc(c.close)+'</p></div>';
+    if(c.fix&&c.fix.fix)h+='<div class="warnbox"><b>原案例口径修正</b>'+(c.fix.orig?'<div style="margin-top:4px">原文：'+esc(c.fix.orig)+'</div>':'')+'<div style="margin-top:4px">按此处理：'+esc(c.fix.fix)+'</div></div>';
+    h+='<div style="margin-top:12px"><button class="btn block" data-act="go" data-arg="#/rp/'+no+'/drill">开始对练</button></div>';
+  }else if(tab==='points'){
+    c.points.forEach(function(p,i){h+='<div class="card"><div class="h4">卡点 '+(i+1)+'：'+esc(p.title)+'</div>'+(p.says?'<div class="who">主任可能这样说</div><div class="quote">'+esc(p.says)+'</div>':'')+'<div class="who" style="margin-top:8px">怎么答</div><ul class="b">'+p.bullets.map(function(b){return '<li>'+esc(b)+'</li>';}).join('')+'</ul>'+(p.basis?'<div class="basis">依据：'+esc(p.basis)+'</div>':'')+'</div>';});
+  }else if(tab==='notes'){
+    h+='<div class="card"><div class="h4">演练注意（容易丢分的地方）</div><ul class="b">'+c.cautions.map(function(b){return '<li>'+esc(b)+'</li>';}).join('')+'</ul></div>';
+    if(c.fix&&c.fix.fix)h+='<div class="warnbox"><b>原案例口径修正</b>'+(c.fix.orig?'<div style="margin-top:4px">原文：'+esc(c.fix.orig)+'</div>':'')+'<div style="margin-top:4px">按此处理：'+esc(c.fix.fix)+'</div></div>';
+  }else if(tab==='follow'){
+    var fv=view.fv||(view.fv={});
+    h+='<p class="note" style="margin-top:0">先想一想、或者写下你会怎么回答，再看参考回答。</p>';
+    c.followups.forEach(function(f,i){h+='<div class="flash"><div class="who">主任追问 '+(i+1)+'</div><div class="q">「'+esc(f.q)+'」</div>'+(fv[i]?'<div class="a">'+esc(f.a)+'</div>':'<div style="margin-top:10px"><button class="btn ghost" data-act="fShow" data-arg="'+i+'">看参考回答</button></div>')+'</div>';});
+  }else if(tab==='script'){
+    var last=null;h+='<div class="chat">';
+    c.dialog.forEach(function(t){if(t.stage!==last){h+='<div class="stage-sep">'+esc(t.stage||'')+'</div>';last=t.stage;}h+=bubble(t,t.who==='doc');});
+    h+='</div>';
+  }else if(tab==='drill'){h+=drill(c);}
+  h+='</div>';
+  if(tab==='drill'&&!(view.d&&view.d.no===no&&view.d.started))h+=bar('<button class="btn" data-act="dStart">开始对练</button>');
+  app.innerHTML=h;
+  if(tab==='drill'){var ta=document.querySelector('textarea[data-inp=dText]');if(ta&&view.d&&view.d.focus){ta.focus();view.d.focus=false;}
+    var end=document.getElementById('drill-end');if(end&&view.d&&view.d.scroll){view.d.scroll=false;end.scrollIntoView({block:'end',behavior:'smooth'});}}
+}
+var canSpeak=('speechSynthesis' in window)&&typeof SpeechSynthesisUtterance!=='undefined';
+function bubble(t,speak){var who=t.who==='doc'?'主任':'代表（参考说法）';return '<div class="msg '+(t.who==='doc'?'doc':'rep')+'">'+(speak&&canSpeak?'<button class="say" data-act="speak" data-arg="'+esc(t.text)+'">朗读</button>':'')+'<span class="lab">'+who+'</span>'+esc(t.text)+'</div>';}
+function drill(c){
+  var d=view.d;
+  if(!d||d.no!==c.no)d=view.d={no:c.no,cur:0,typed:{},started:false};
+  if(!d.started){
+    return '<div class="card"><div class="h4">一对一对练</div><ul class="b"><li>程序扮<b>主任</b>，你扮<b>代表</b>，按开场、探询、传递、异议处理、缔结五个阶段走一遍。</li><li>轮到你时，先用自己的话说（可以打字，也可以用输入法的语音输入，或者直接说出声），再点「看参考说法」。</li><li>每一轮会给教练提示；你写了内容，程序会对照参考说法里的关键数字和关键词。</li><li>走完后按清单自评，记录练习次数。</li></ul>'+(canSpeak?'<p class="note">主任的话可以点「朗读」听一遍。</p>':'')+'</div><div class="card"><div class="h4">本案目标</div><p class="p">'+esc(c.goal)+'</p></div>';
+  }
+  var dl=c.dialog;
+  // advance doc turns automatically
+  while(d.cur<dl.length&&dl[d.cur].who==='doc')d.cur++;
+  var curStage=d.cur<dl.length?dl[d.cur].stage:'缔结';
+  var si=STAGES.indexOf(curStage);
+  var h='<div class="stages">'+STAGES.map(function(s,i){return '<span class="'+(i===si&&d.cur<dl.length?'on':i<si||d.cur>=dl.length?'past':'')+'">'+s+'</span>';}).join('')+'</div>';
+  h+='<div class="chat">';var last=null;
+  for(var i=0;i<d.cur;i++){var t=dl[i];if(t.stage!==last){h+='<div class="stage-sep">'+esc(t.stage||'')+'</div>';last=t.stage;}
+    if(t.who==='rep'&&d.typed[i])h+='<div class="msg mine"><span class="lab">你说的</span>'+esc(d.typed[i])+'</div>';
+    h+=bubble(t,t.who==='doc');
+    if(t.who==='rep'&&d.typed[i])h+=kwBox(t.text,d.typed[i]);
+  }
+  h+='</div>';
+  if(d.cur<dl.length){
+    var t=dl[d.cur];
+    if(t.stage!==last)h+='<div class="chat" style="margin-top:10px"><div class="stage-sep">'+esc(t.stage||'')+'</div></div>';
+    var hint=coachHint(c,dl,d.cur);
+    h+='<div class="coach" style="margin-top:10px"><div class="tip"><b>教练提示 · '+esc(t.stage||'')+'</b><br>'+esc(STAGE_TIP[t.stage]||'')+(hint?'<br>'+hint:'')+'</div>'+
+      '<textarea data-inp="dText" placeholder="轮到你说：用自己的话回应主任（可留空直接看参考）">'+esc(d.draft||'')+'</textarea>'+
+      '<div class="row" style="margin-top:8px"><button class="btn" data-act="dReveal">看参考说法</button></div></div>';
+  }else{
+    var rp=sget('rpDone',{})[c.no];
+    h+='<div class="card" style="margin-top:12px" id="drill-end"><div class="h4">对练结束 · 自评</div><p class="note" style="margin-top:0">对照下面几条，做到了就勾上。</p>';
+    var items=RUBRIC.concat(c.cautions);
+    var ck=d.ck||(d.ck={});
+    items.forEach(function(it,k){if(k===0)h+='<div class="who" style="margin-top:4px">通用要求</div>';if(k===RUBRIC.length)h+='<div class="who" style="margin-top:12px">本案注意（容易丢分的地方）</div>';h+='<label class="chk"><input type="checkbox" data-act="dCheck" data-arg="'+k+'" '+(ck[k]?'checked':'')+'><span>'+esc(it)+'</span></label>';});
+    var n=Object.keys(ck).filter(function(k){return ck[k];}).length;
+    h+='<div class="kv" style="margin-top:6px"><span>自评</span><b>'+n+' / '+items.length+'</b></div>';
+    h+='<div class="basis">闭环目标参考：'+esc(c.close)+'</div>';
+    h+='<div class="row" style="margin-top:12px"><button class="btn gray" data-act="dRestart">再练一遍</button><button class="btn" data-act="dFinish" data-arg="'+n+'/'+items.length+'">记录本次练习</button></div>'+(rp?'<p class="note">已练 '+rp.n+' 次，上次 '+fmtDate(rp.t)+'，自评 '+esc(rp.last)+'</p>':'')+'</div>';
+  }
+  return h;
+}
+function bigrams(s){s=s.replace(/[\s，。；：、！？「」（）“”‘’,.;:!?()\-—…]/g,'');var o={};for(var i=0;i<s.length-1;i++)o[s.substr(i,2)]=1;return o;}
+function sim(a,b){var A=bigrams(a),B=bigrams(b),n=0,m=0;for(var k in A){m++;if(B[k])n++;}var l=Object.keys(B).length;return n/Math.max(1,Math.min(m,l));}
+function coachHint(c,dl,idx){
+  // find previous doctor line; match to a 卡点
+  var prev=null;for(var i=idx-1;i>=0;i--){if(dl[i].who==='doc'){prev=dl[i].text;break;}}
+  var st=dl[idx].stage;
+  if(st==='开场')return '本案目标：'+esc(c.goal);
+  if(!prev||!(st==='传递'||st==='异议处理'))return '';
+  var best=null,bs=0;c.points.forEach(function(p,k){var s=sim(prev,p.says+p.title);if(s>bs){bs=s;best=k;}});
+  if(best==null||bs<0.12)return '';
+  var p=c.points[best];
+  return '主任这句对应 卡点 '+(best+1)+'「'+esc(p.title)+'」，可以先看要点：<br>· '+p.bullets.slice(0,3).map(esc).join('<br>· ');
+}
+var TERMS=['共识','指南','说明书','医保','适应症','INAVO120','FeDeriCa','PHranceSCa','PIK3CA','ctDNA','组织','血浆','蜡块','NGS','PCR','检出下限','MDT','病理科','医学部','药剂科','医保办','二甲双胍','空腹血糖','HbA1c','高血糖','监测','哌柏西利','氟维司群','内分泌耐药','一线','OS','PFS','mPFS','ORR','HR','试行','床位','日间','CMI','DRG','DIP','皮下','负荷剂量','维持剂量','观察','LVEF','流程','开单','模板','随访','获益','安全性','停药','减量','内分泌科','护士','药房','平均住院日','周转','总账','科室会','两周','下周'];
+function keyTerms(text){
+  var out=[];var seen={};
+  var plain=text.replace(/[A-Za-z]+[\d][A-Za-z\d\-]*/g,' ').replace(/\d{4}\s*年/g,' ');
+  var nums=plain.match(/\d+(?:\.\d+)?\s*(?:%|个月|天|周|分钟|小时|mg|例|倍|万元|万)?/g)||[];
+  nums.forEach(function(n){n=n.replace(/\s+/g,'');if(n.length<2&&!/[%天周]/.test(n))return;if(/^\d$/.test(n))return;var k=n;if(!seen[k]){seen[k]=1;out.push(k);}});
+  TERMS.forEach(function(t){if(text.toUpperCase().indexOf(t.toUpperCase())>=0&&!seen[t]){var dup=out.some(function(o){return o.indexOf(t)>=0;});if(!dup){seen[t]=1;out.push(t);}}});
+  return out.slice(0,10);
+}
+function kwBox(ref,mine){
+  var ks=keyTerms(ref);if(!ks.length)return '';
+  var M=mine.toUpperCase().replace(/\s+/g,'');
+  var hit=0;var h='<div class="kw" style="align-self:flex-end;justify-content:flex-end">';
+  ks.forEach(function(k){var num=k.match(/^\d+(?:\.\d+)?/);var probe=(num?num[0]:k).toUpperCase();var ok=M.indexOf(probe)>=0;if(ok)hit++;h+='<span class="'+(ok?'hit':'miss')+'">'+(ok?'已提到 ':'未提到 ')+esc(k)+'</span>';});
+  return h+'<span class="hit" style="background:none;color:var(--ink-3)">关键词 '+hit+'/'+ks.length+'</span></div>';
+}
+function speak(text){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=1.05;speechSynthesis.speak(u);}catch(e){toast('这台设备不支持朗读');}}
+
+/* ---------- reference & about ---------- */
+function vRef(){
+  var h=top('数字速查','back')+'<div class="wrap"><p class="note" style="margin-top:0">演练时引用的数字与出处，来自《拜访案例汇编 · 应答要点与 Roleplay 对话》。</p><div class="card"><table class="ref">';
+  REF.forEach(function(r){h+='<tr><td>'+esc(r.k)+'</td><td>'+esc(r.v)+'<span class="s">'+esc(r.src)+'</span></td></tr>';});
+  app.innerHTML=h+'</table></div></div>'+foot();
+}
+function vAbout(){
+  var h=top('使用说明','#/')+'<div class="wrap">';
+  h+='<div class="card"><div class="h4">四种模式</div><ul class="b"><li><b>练习模式</b>：按顺序从第 1 题做到最后，单选点一下即揭晓，多选选好后点「提交答案」；想不起来点「看答案」。可按方向、题型筛选，自动记住做到哪一题。</li><li><b>随机模式</b>：题目和选项顺序每次重新打乱，自选题量（10、20、30、50、全部或自定义）。</li><li><b>考试模式</b>：随机 7 道单选 + 3 道多选，限时 3 分钟。交卷后看分数、各方向得分、逐题答案和解析。</li><li><b>Roleplay 拜访演练</b>：10 个案例，含客户画像、应答要点、分五个阶段的一对一对练、主任追问和自评清单。</li></ul></div>';
+  h+='<div class="card"><div class="h4">考试计分</div><p class="p">每题 10 分，满分 100 分。单选选对得 10 分；多选全部选对得 10 分，少选（选的都对但没选全）得 5 分，有选错或未作答得 0 分。时间到自动交卷。</p></div>';
+  h+='<div class="card"><div class="h4">错题本与收藏</div><p class="p">答错的题和点过「看答案」的题自动进错题本，在「错题重练」里答对就移出。练习记录、错题、收藏、考试成绩都只存在你这台手机的浏览器里，不上传；换手机或清理浏览器数据后会清空。</p></div>';
+  h+='<div class="card"><div class="h4">题库说明</div><p class="p">题目来自两广海南智领靶向题库（AI 赋能大使出题），共 '+Q.length+' 题；原表中 5 道选项错位的题暂未收录，修订后补回。解析依据说明书、研究和过审讲题整理，标了出处；个别题按说明书做了修订，会在解析下方注明。</p></div>';
+  h+='<div class="card"><div class="h4">添加到手机桌面</div><p class="p">iPhone 用 Safari 打开后点底部「分享」→「添加到主屏幕」；安卓在浏览器菜单里选「添加到桌面」。之后像小程序一样一点就开。</p></div>';
+  h+='<div class="warnbox">内部学术演练资料，仅作培训使用，不得对外分发或直接用于客户拜访。</div>';
+  h+='<div style="margin-top:12px"><button class="btn gray block" data-act="resetAll">清空本机全部练习数据</button></div>';
+  app.innerHTML=h+'</div>'+foot();
+}
+
+/* ---------- events ---------- */
+app.addEventListener('click',function(e){
+  var el=e.target.closest('[data-act]');if(!el||el.disabled)return;
+  var act=el.getAttribute('data-act'),arg=el.getAttribute('data-arg');
+  if(act==='dCheck'){var d=view.d;d.ck=d.ck||{};d.ck[arg]=el.checked;var c=CASES.filter(function(x){return x.no===d.no;})[0];var y=window.scrollY;render();window.scrollTo(0,y);return;}
+  e.preventDefault();
+  A[act]&&A[act](arg,el);
+});
+document.addEventListener('click',function(e){var el=e.target.closest('.sheet [data-act]');if(!el)return;e.preventDefault();var a=el.getAttribute('data-act');A[a]&&A[a](el.getAttribute('data-arg'),el);});
+app.addEventListener('input',function(e){var k=e.target.getAttribute('data-inp');
+  if(k==='rsN'){var v=parseInt(e.target.value,10);if(v>0){view.rs.n=v;sset('rsN',v);}}
+  if(k==='dText'){view.d.draft=e.target.value;}
+});
+app.addEventListener('change',function(e){if(e.target.getAttribute('data-inp')==='rsN'){var y=window.scrollY;render();window.scrollTo(0,y);}});
+var A={
+  go:function(h){go(h);},
+  back:function(h){if(h==='back'){if(history.length>1)history.back();else go('#/');}else go(h);},
+  fav:function(id){var on=toggleFav(+id);toast(on?'已收藏':'已取消收藏');var y=window.scrollY;render();window.scrollTo(0,y);},
+  pTopic:function(t){var f=pFilter();var i=f.topics.indexOf(t);if(i<0)f.topics.push(t);else f.topics.splice(i,1);sset('pFilter',f);view={};render();},
+  pType:function(t){var f=pFilter();f.type=f.type===t?'':t;sset('pFilter',f);view={};render();},
+  pReset:function(){sset('pFilter',{topics:[],type:''});view={};render();},
+  pick:function(oi){oi=+oi;var r=parts()[0];if(r==='practice')pPick(oi);else if(r==='exam')ePick(oi);else sAnswer(function(a,q){if(a.revealed)return;if(q.type==='single'){a.sel=[oi];a.revealed=true;}else{var i=a.sel.indexOf(oi);if(i<0)a.sel.push(oi);else a.sel.splice(i,1);}});},
+  pSubmit:function(){var vs=view.p,q=QBY[vs.id];vs.revealed=true;setRec(q.id,vs.sel,isRight(q,vs.sel));render();},
+  pView:function(){var vs=view.p,q=QBY[vs.id];vs.revealed=true;vs.viewed=true;setRec(q.id,vs.sel,false,true);render();},
+  pRedo:function(){var vs=view.p;vs.sel=[];vs.revealed=false;vs.viewed=false;var r=rec();delete r[vs.id];sset('rec',r);render();},
+  pMove:function(d){var list=pList();var p=Math.max(0,Math.min(list.length-1,sget(pKey(),0)+(+d)));sset(pKey(),p);view.p=null;render();window.scrollTo(0,0);},
+  pSheet:function(){pSheet();},
+  pJump:function(i){sset(pKey(),+i);view.p=null;closeSheet();render();window.scrollTo(0,0);},
+  pClear:function(){if(!confirm('确定清空全部练习记录？错题本和收藏不受影响。'))return;sset('rec',{});var f=pList();sdel(pKey());view={};closeSheet();render();toast('已清空');},
+  rsTopic:function(t){var st=view.rs;var i=st.topics.indexOf(t);if(i<0)st.topics.push(t);else st.topics.splice(i,1);sset('rsTopics',st.topics);render();},
+  rsType:function(t){view.rs.type=t;render();},
+  rsReset:function(){view.rs.topics=[];sset('rsTopics',[]);render();},
+  rsN:function(n){view.rs.n=+n;sset('rsN',+n);render();},
+  rsStart:function(){var st=view.rs;var pool=Q.filter(function(q){return (!st.topics.length||st.topics.indexOf(q.topic)>=0)&&(!st.type||q.type===st.type);});var n=Math.max(1,Math.min(st.n,pool.length));
+    sset('ses.random',newSession(shuffle(pool).slice(0,n).map(function(q){return q.id;})));sset('rsLast',{topics:st.topics,type:st.type,n:n});go('#/random/run');},
+  rsAgain:function(){var L=sget('rsLast',{topics:[],type:'',n:20});view.rs={topics:L.topics,type:L.type,n:L.n};A.rsStart();},
+  sSubmit:function(){sAnswer(function(a){a.revealed=true;});},
+  sView:function(){sAnswer(function(a){a.revealed=true;a.viewed=true;});},
+  sMove:function(d){var k=view.s.key;var ses=sget(k,null);ses.idx=Math.max(0,ses.idx+(+d));sset(k,ses);render();window.scrollTo(0,0);},
+  sQuit:function(){var k=view.s.key;var ses=sget(k,null);if(!confirm('结束本组练习，直接看结果？'))return;ses.idx=ses.ids.length;sset(k,ses);render();},
+  bookRun:function(w){var ids=(w==='fav'?favs():wrongs()).filter(function(id){return QBY[id];});if(!ids.length)return;sset('ses.book-'+w,newSession(shuffle(ids)));go('#/book/'+w+'/run');},
+  bookDel:function(x){var p=x.split(':');var id=+p[1];if(p[0]==='fav')toggleFav(id);else delWrong(id);render();},
+  bookClear:function(w){if(!confirm(w==='fav'?'确定清空全部收藏？':'确定清空错题本？'))return;sset(w==='fav'?'fav':'wrong',[]);render();toast('已清空');},
+  examStart:function(){var ses=sget('ses.exam',null);if(ses&&!ses.done&&Date.now()-ses.start<EXAM_SEC*1000&&!confirm('有一场考试还没交卷，确定放弃并重新开始？'))return;examStart();},
+  eMove:function(d){var ses=sget('ses.exam',null);ses.idx=Math.max(0,Math.min(ses.ids.length-1,ses.idx+(+d)));sset('ses.exam',ses);render();window.scrollTo(0,0);},
+  eJump:function(i){var ses=sget('ses.exam',null);ses.idx=+i;sset('ses.exam',ses);render();},
+  eSubmit:function(){var ses=sget('ses.exam',null);var left=ses.ids.filter(function(x){return !(ses.ans[x]&&ses.ans[x].sel.length);}).length;
+    if(!confirm(left?'还有 '+left+' 题没作答，确定交卷？':'确定交卷？'))return;examSubmit(false);},
+  practiceTopic:function(t){sset('pFilter',{topics:[t],type:''});go('#/practice');},
+  examRedoWrong:function(i){var x=sget('examHist',[])[+i];if(!x)return;var ids=x.detail.filter(function(d){return d.pts<10;}).map(function(d){return d.id;});sset('ses.random',newSession(shuffle(ids)));go('#/random/run');},
+  fShow:function(i){view.fv[i]=true;render();},
+  dStart:function(){view.d.started=true;view.d.focus=true;render();},
+  dReveal:function(){var d=view.d;var c=CASES.filter(function(x){return x.no===d.no;})[0];var txt=(d.draft||'').trim();if(txt)d.typed[d.cur]=txt;d.draft='';d.cur++;
+    while(d.cur<c.dialog.length&&c.dialog[d.cur].who==='doc')d.cur++;d.scroll=true;render();
+    var msgs=document.querySelectorAll('.chat .msg');var lastDoc=null;for(var i=msgs.length-1;i>=0;i--){if(msgs[i].classList.contains('doc')){lastDoc=msgs[i];break;}}
+    var coach=document.querySelector('.coach')||document.getElementById('drill-end');if(coach)coach.scrollIntoView({block:'end',behavior:'smooth'});},
+  dRestart:function(){var no=view.d.no;view.d={no:no,cur:0,typed:{},started:true};render();window.scrollTo(0,0);},
+  dFinish:function(s){var d=view.d;var all=sget('rpDone',{});var x=all[d.no]||{n:0};x.n++;x.t=Date.now();x.last=s;all[d.no]=x;sset('rpDone',all);toast('已记录，第 '+x.n+' 次');render();},
+  speak:function(t){speak(t);},
+  resetAll:function(){if(!confirm('确定清空本机全部练习记录、错题本、收藏、考试成绩和演练记录？此操作不能撤销。'))return;['rec','wrong','fav','examHist','rpDone','ses.exam','ses.random','ses.book-wrong','ses.book-fav','pFilter','rsTopics','rsN','rsLast'].forEach(sdel);
+    try{Object.keys(localStorage).forEach(function(k){if(k.indexOf(NS+'pPos.')===0)localStorage.removeItem(k);});}catch(e){}toast('已清空');go('#/');}
+};
+render();
+})();
+</script>
+</body>
+</html>
